@@ -1,0 +1,393 @@
+% !TeX root = hdr_dfolio.tex
+
+%\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{HDRdfolio}[2014/11/27 \space v1\space HDR package style]
+
+
+\RequirePackage{ifthen,ifpdf,xspace,calc}
+\RequirePackage{ucs}
+\RequirePackage{t1enc}
+%\RequirePackage[T1]{fontenc}
+%\RequirePackage[utf8x]{inputenc}
+
+\@ifpackageloaded{babel}{\@DF@Info{babel header still loaded}
+  \PassOptionsToPackage{french,american,main=english}{babel}
+}{\RequirePackage[french,american,main=english]{babel}}
+\selectlanguage{american}
+%\selectlanguage{francais} 
+%\frenchspacing
+%\frenchbsetup{ThinSpaceInFrenchNumbers,FrenchFootnotes,AutoSpacePunctuation} % \ThinSpaceInFrenchNumbers
+%\AutoSpaceBeforeFDP
+
+
+\RequirePackage{graphicx}
+\RequirePackage[unicode,breaklinks,pagebackref,hyperindex=true]{hyperref}
+\RequirePackage[a4paper,centering,offset=0pt,]{geometry}
+%\else
+%\RequirePackage[dvips]{graphicx}
+%\RequirePackage[breaklinks,dvipdfm,pagebackref,hyperindex=true]{hyperref}
+%\RequirePackage[dvipdfm,a4paper,centering,offset=0pt]{geometry} %,margin=2.5cm,includeheadfoot,headheight=14pt,
+%\fi
+
+
+\RequirePackage{keyval}
+\RequirePackage{xkeyval}
+%%     ------------------------------------------------------------
+
+\newif\if@DF@verbose\@DF@verbosetrue
+\newif\if@DF@warning\@DF@warningtrue
+\newif\if@draft\@draftfalse
+\let\@df@finaltrue\@draftfalse
+\let\@df@finalfalse\@drafttrue
+
+\DeclareOptionX{verbose}[false]{\csname @DF@verbose#1\endcsname}
+\DeclareOptionX{draft}[true]{\csname @draft#1\endcsname}
+\DeclareOptionX{final}[true]{\csname @finaltrue#1\endcsname}
+\ExecuteOptionsX{final=true}
+\ProcessOptionsX
+%%      Warning and info ------------------------------------------------------------
+
+\providecommand\ifVerbose[2][\relax]{\if@DF@verbose{#2}\else{#1}\fi}
+\providecommand\ifWarning[2][\relax]{\if@DF@warning{#2}\else{#1}\fi}
+\def\@DF@Warning#1{\ifWarning{\PackageWarning{HDRdfolio}{#1}}}
+\def\@DF@WarningNoLine#1{\ifWarning{\PackageWarningNoLine{HDRdfolio}{#1}}}
+\def\@DF@Info#1{\ifVerbose{%
+    \typeout{***********************************************************************}
+    \PackageInfo{HDRdfolio}{#1}\typeout{#1}
+    \typeout{***********************************************************************}
+}}
+\def\IfDraft#1{\if@draft#1\fi}
+\def\IfFinal#1{\if@draft\relax\else{#1}\fi}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\IfDraft{\geometry{showframe}}
+% taille des liserets
+%\renewcommand{\headrulewidth}{0.5pt}
+%\renewcommand{\footrulewidth}{0.5pt}
+
+\def\@draft@overlay#1{\tikz[remember picture,overlay]{\node[rotate=60,scale=10,text opacity=0.2] at (current page.center) {#1};}}
+
+\newcommand{\reviewtimetoday}[2]{\special{!userdict begin
+    /bop-hook{gsave 20 710 translate 45 rotate 0.8 setgray
+      /Times-Roman findfont 12 scalefont setfont 0 0   moveto (#1) show
+      0 -12 moveto (#2) show grestore}def end}}
+
+
+\relpenalty=10000       % empeche la c\'esure des \'equations
+\binoppenalty=10000
+
+
+
+\AtBeginDocument{
+  \@ifpackageloaded{textcomp}{\@DF@Info{textcomp package still loaded}}{\RequirePackage{textcomp}}
+  \@ifpackageloaded{mathcomp}{\@DF@Info{mathcomp package still loaded}}{\RequirePackage{mathcomp}}
+}
+\@ifpackageloaded{amsmath}{\@DF@Info{amsmath package still loaded}}{\RequirePackage{amsmath}}
+\@ifpackageloaded{amsthm}{\@DF@Info{amsmath package still loaded}}{\RequirePackage{amsthm}}
+\@ifpackageloaded{amsfonts}{\@DF@Info{amsfonts package still loaded}}{\RequirePackage{amsfonts}}
+\@ifpackageloaded{amssymb}{\@DF@Info{amssymb package still loaded}}{\RequirePackage{amssymb}}
+\@ifpackageloaded{bm}{\@DF@Info{bm package still loaded}}{\RequirePackage{bm}}
+
+\RequirePackage{multicol}\columnseprule=0.5pt
+\RequirePackage{multirow}
+\RequirePackage{enumerate,array,tabularx}
+\RequirePackage{vmargin}					%Definition des marges
+
+\RequirePackage{caption}
+\RequirePackage{subfloat}
+\RequirePackage{framed}
+\RequirePackage[input-decimal-markers=.,exponent-product=\cdot,tight-spacing = true,per-mode = symbol]{siunitx}%,per-symbol=\text{~div~}
+\RequirePackage{fancyhdr,fancybox}
+\usepackage{pdfpages}   
+
+% % FONTs, COLOR AND styles
+\@ifpackageloaded{marvosym}{\@DF@Info{marvosym package still loaded}}{\RequirePackage{marvosym}}
+\@ifpackageloaded{xcolor}{\@DF@Info{xcolor header still loaded}
+  \PassOptionsToPackage{svgnames,dvipsnames,table}{xcolor}}{\RequirePackage[svgnames,dvipsnames,table]{xcolor}}
+\RequirePackage{relsize}
+%\RequirePackage{lmodern}
+%\RequirePackage[scaled=.92]{helvet}
+\RequirePackage{aecompl,wasysym,pifont} %lmodern
+\RequirePackage{lettrine}
+\renewcommand{\LettrineTextFont}{\sffamily\scshape}
+\renewcommand{\LettrineFontHook}{\sffamily}%\fontshape{sl}
+\RequirePackage{ragged2e}
+\RequirePackage{fontspec}
+\setsansfont{Calibri}
+
+\input{HDRdfolio_color.sty}
+
+%\renewcommand{\sfdefault}{lmss}
+\newcommand{\Latin}[1]{\textsl{#1}}
+\newcommand{\French}[1]{\foreignlanguage{french}{\textsl{#1}}}
+\newcommand{\EFrench}[1]{\foreignlanguage{french}{\enquote{\textsl{#1}}}}
+\newcommand{\English}[1]{\foreignlanguage{english}{\textsl{#1}}}
+\newcommand{\EEnglish}[1]{``\foreignlanguage{english}{\textsl{#1}}''}
+\newcommand{\Allemand}[1]{\foreignlanguage{german}{\textsl{#1}}}
+\let\Anglais=\English
+
+\providecommand{\enquote}[1]{{``\emph{#1}''}\xspace}
+
+
+%\RequirePackage{pgf}
+\RequirePackage{tikz}
+% Annotation et commentaires
+\RequirePackage[author={DF}]{pdfcomment}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+% % Biblio
+\RequirePackage{url}
+\RequirePackage[sort&compress,square, nonamebreak,comma,numbers]{natbib}
+
+\bibliographystyle{IEEEtran}
+
+
+% ---------------------------------------------------------------------------------
+%  Listes de commandes modifiant le style des chapitres, tables des mati\`ere etc...
+% ---------------------------------------------------------------------------------
+% Ajoute si n\'ecessaire une page blanche pour que la page suivante soit impaire (\`a droite)
+\newcommand{\clearemptydoublepage}{\markboth{}{}%
+  \ifthenelse{\isodd{\value{page}}}{\newpage{\thispagestyle{empty}}}{}\cleardoublepage\pagestyle{fancy}}
+
+%\ChNameUpperCase
+%\ChNameVar{\fontsize{14}{16}\usefont{OT1}{phv}{m}{n}\selectfont\raggedleft}
+%\ChNumVar{\fontsize{60}{62}\usefont{OT1}{ptm}{m}{n}\selectfont\raggedleft}
+%\ChTitleVar{\Huge\usefont{OT1}{phv}{m}{n}\selectfont\raggedleft}
+
+\setcounter{secnumdepth}{4}            % niveau de hi\'erarchisation titres
+%\setcounter{minitocdepth}{2}           % niveau de hi\'erarchisation des minitocs
+\setcounter{tocdepth}{3}               % niveau de hi\'erarchisation de la table des mati\`eres
+
+
+\providecommand{\RefChapI}{\ChapRef{1}}
+\providecommand{\RefChapII}{\ChapRef{2}}
+\providecommand{\RefChapIII}{\ChapRef{3}}
+\providecommand{\RefChapIV}{\ChapRef{4}}
+\providecommand{\RefChapV}{\ChapRef{5}}
+\providecommand{\RefAnnexeA}{\ChapRef{A}}
+\providecommand{\RefAnnexeCV}{\ChapRef{CV}}
+\providecommand{\RefAnnexeRef}{\ChapRef{Ref}}
+
+\newcommand{\ChapRef}[1]{{\ref{chap:#1}}\xspace}
+%{Label #1 is associated to the value  \ref{#1} // \autoref{#1} and the page \pageref{#1}}
+\renewcommand \thechapter {\@Roman\c@chapter}
+%
+\newcommand\specialchapter@cx[2][]{\chapter[#2]{{#2}}\label{chap:#1}}
+%
+%%\RequirePackage[Lenny]{fncychap}                          % Permet de d\'efinir le style de vos en-t\^etes de chapitre
+%\RequirePackage[Glenn]{fncychap}
+\RequirePackage{fncychap}
+% %From Glenn chapter style
+
+\renewcommand{\DOCH}{%
+  \settoheight{\myhi}{\CTV\FmTi{Test}}
+  \setlength{\py}{\baselineskip}
+  \addtolength{\py}{\RW}
+  \addtolength{\py}{\myhi}
+  \setlength{\pyy}{\py}
+  \addtolength{\pyy}{-1\RW}
+  
+  \raggedright
+  \CNV\FmN{\@chapapp}\space\CNoV\thechapter
+  \hskip 3pt\color{chapterrule}\mghrulefill{\RW}\rule[-1\pyy]{2\RW}{\py}\par\nobreak}
+
+\renewcommand{\DOTI}[1]{%
+  \addtolength{\pyy}{-4pt}
+  \settoheight{\myhi}{\CTV\FmTi{#1}}
+  \addtolength{\myhi}{\py}
+  \addtolength{\myhi}{-1\RW}
+  \vskip -1\pyy
+  {\color{chapterrule}\rule{2\RW}{\myhi}\mghrulefill{\RW}}\hskip 2pt
+  \raggedleft\CTV\FmTi{#1}\par\nobreak
+  \vskip 20\p@}
+
+%\renewcommand{\DOTIS}[1]{%
+%  \raggedright
+%  \CTV\FmTi{#1}\par\nobreak
+%  \vskip 20\p@}
+%\def\@makechapterhead#1{ %\leftmark{#1}%
+%  \vspace*{20\p@}%
+%  {\parindent \z@ \raggedright \normalfont
+%    \ifnum \c@secnumdepth >\m@ne
+%    \if@mainmatter%%%%% Fix for frontmatter, mainmatter, and backmatter 040920
+%    \DOCH
+%    \fi
+%    \fi
+%    \interlinepenalty\@M
+%    \if@mainmatter%%%%% Fix for frontmatter, mainmatter, and backmatter 060424
+%    \DOTI{#1}%
+%    \else%
+%    \DOTIS{#1}%
+%    \fi
+%}}
+\ChNameVar{\normalsize\bfseries\Large\sf\color{chapter}}
+\ChNumVar{\larger\color{chapter}}
+\ChTitleVar{\large\bfseries\scshape\color{chapter}}
+\ChRuleWidth{2pt}
+
+
+\newcommand{\Chapitre}[2][]{%
+  \clearemptydoublepage%
+  %\chapter[#1]{{#1}}%
+  \thispagestyle{plain}%
+  \global\@topnum\z@
+  \@afterindentfalse
+  \specialchapter@cx[#1]{#2}
+  %\vfill  \newpage%
+  \fancyhf{}
+  \fancyhead[LE]{\textsc {\footnotesize\nouppercase \leftmark}}%
+  \fancyhead[RO]{\textsc {\footnotesize\nouppercase \rightmark}}%
+  \fancyfoot[R]{\thepage}%
+  \fancyfoot[L]{{\foot@banner}}
+}
+
+\def\foot@banner{
+  \if@draft\@draft@overlay{Draft}
+  {\relsize{-2}{Version pr{\'e}liminaire de {\normalfont{\texttt{\jobname}}}}, %
+    {g\'en\'er\'ee le \today{} }
+    \hfill}\fi}
+  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% GESTION DES SECTIONS ----
+% \@startsection {NAME}{LEVEL}{INDENT}{BEFORESKIP}{AFTERSKIP}{STYLE}
+%            optional * [ALTHEADING]{HEADING}
+%    Generic command to start a section.
+%    NAME       : e.g., 'subsection'.p
+%    LEVEL      : a number, denoting depth of section -- e.g., chapter=1,
+%                 section = 2, etc.  A section number will be printed if
+%                 and only if LEVEL < or = the value of the secnumdepth
+%                 counter.
+%    INDENT     : Indentation of heading from left margin
+%    BEFORESKIP : Absolute value = skip to leave above the heading.
+%                 If negative, then paragraph indent of text following
+%                 heading is suppressed.
+%    AFTERSKIP  : if positive, then skip to leave below heading,
+%                       else - skip to leave to right of run-in heading.
+%    STYLE      : commands to set style
+%  If '*' missing, then increments the counter.  If it is present, then
+%  there should be no [ALTHEADING] argument.  A sectioning command
+%  is normally defined to \@startsection + its first six arguments.
+\renewcommand\section{\@startsection {section}{1}{-1em}%
+  {-4ex \@plus -2ex \@minus -.5ex}%
+  {2.3ex \@plus.2ex}%
+  {\normalfont\Large\scshape\color{section}}}
+\renewcommand\subsection{\@startsection{subsection}{2}{\z@}%
+  {-3.25ex\@plus -1ex \@minus -.2ex}%
+  {1.5ex \@plus .2ex}%
+  {\normalfont\large\bfseries\sffamily\color{subsection}}}
+\renewcommand\subsubsection{\@startsection{subsubsection}{3}{\z@}%
+  {-1.25ex\@plus -0.5ex \@minus -.2ex}%
+  {.5ex \@plus .1ex}%
+  {\normalfont\normalsize\bfseries\sffamily\color{subsubsection}}}
+\renewcommand\paragraph{\@startsection{paragraph}{4}{1em}%
+  {-1.125ex\@plus -0.25ex \@minus -.1ex}%
+  {0.25ex}%
+  {\normalfont\normalsize\bfseries\sffamily\color{paragraphparagraph}}}
+\renewcommand\subparagraph{\@startsection{subparagraph}{5}{\parindent}%
+  {3.25ex \@plus1ex \@minus .2ex}%
+  {-1em}%
+  {\normalfont\normalsize\bfseries}}
+\renewcommand\theparagraph{\Alph{paragraph})}
+\renewcommand\thesubparagraph{\roman{subparagraph})}
+
+% Gestion des espacements dans la toc/lof et lot
+\renewcommand*\l@section{\@dottedtocline{1}{1.5em}{2.3em}}
+\renewcommand*\l@subsection{\@dottedtocline{2}{3.8em}{3.2em}}
+\renewcommand*\l@subsubsection{\@dottedtocline{3}{7.0em}{4.1em}}
+\renewcommand*\l@paragraph{\@dottedtocline{4}{10em}{5em}}
+\renewcommand*\l@subparagraph{\@dottedtocline{5}{12em}{6em}}
+
+\renewcommand*\l@figure{\@dottedtocline{1}{2em}{2.6em}}
+\renewcommand*\l@table{\@dottedtocline{1}{1.5em}{2.3em}}
+
+\newcommand{\Introduction}[1][Introduction]{\section*{#1}\sectionmark{#1}\thispagestyle{plain}}
+
+% ---------------------------------------------------------------------------------
+% Glossary / list of abbreviations
+\RequirePackage[nomain,acronym,section,nonumberlist,xindy,toc]{glossaries} %nomain, if you define glossaries in a file, and you use \include{These_glossary}
+\RequirePackage[xindy]{imakeidx}
+\AtBeginDocument{\makeglossaries\makeindex}
+
+\RequirePackage{longtable}
+%% \Nomenclature
+\glossarystyle{longheaderborder}
+\setlength{\glsdescwidth}{.75\linewidth-1em}
+
+\newglossarystyle{nomenclature}{%
+  \renewcommand*{\glossaryheader}{%
+    \hline
+    \bfseries Notation&\bfseries\descriptionname&
+    \bfseries Unit\'e\\\hline\endhead
+    \hline\endfoot}%
+  \setlength{\glsdescwidth}{.7\linewidth-1em}
+  \setlength{\glspagelistwidth}{4.5em}
+  % allow line wrap in the description column
+  \renewenvironment{theglossary}%
+  {\begin{longtable}{|l|p{\glsdescwidth}|p{\glspagelistwidth}|}}%
+    {\end{longtable}}%
+  \renewcommand{\glsgroupskip}{}% make nothing happen between groups
+  % swap second and third columns
+  \renewcommand*{\glossaryentryfield}[5]{%
+    \glsentryitem{##1}\glstarget{##1}{##2} & ##3 & ##4\\[0.5ex]\hline}
+  % sub-entries
+  \renewcommand*{\glossarysubentryfield}[6]{%
+    \glssubentryitem{##2}%
+    \glstarget{##2}{##3} &  ##4 & ##6\\}%
+  
+}
+
+\newcommand{\Nomenclature}[1][\@empty]{%
+  \clearemptydoublepage%
+  \chapter*{Glossaires}
+  \fancyhead[LE]{\textsc{Glossaires}}%
+  \fancyhead[RO]{\textsc{Glossaires}}%
+  \cfoot{\thepage}
+  \ifx#1\@empty\relax\else\input{#1} \fi
+  %Print list of symbols
+  \printglossary[type=nomenclature,style=nomenclature]
+  \pagebreak[3]
+  %Acronyme
+  \printglossary[type=\acronymtype,style=list]
+}
+
+
+
+% ---------------------------------------------------------------------------------
+% % Lists
+\RequirePackage{enumitem}
+\setlist{noitemsep}
+%\setlist[1]{\labelindent=\parindent} % < Usually a good idea
+\setlist[itemize]{leftmargin=*}
+\setlist[itemize,1]{label={\bfseries\textbullet}}
+\setlist[itemize,2]{label={\bfseries\textendash}}
+% \renewcommand{\labelitemi}{{\bfseries\textbullet}}
+% \renewcommand{\labelitemii}{{\bfseries\textendash}}
+% \renewcommand{\labelitemiii}{\textasteriskcentered}
+
+\newcommand*{\listitemsymbol}      {\labelitemi~}
+% lengths
+\newlength{\quotewidth}
+\newlength{\hintscolumnwidth}
+\setlength{\hintscolumnwidth}{5.em}
+\newlength{\separatorcolumnwidth}
+\setlength{\separatorcolumnwidth}{0.025\textwidth}
+\newlength{\maincolumnwidth}
+\newlength{\doubleitemmaincolumnwidth}
+\newlength{\listitemsymbolwidth}
+\settowidth{\listitemsymbolwidth}{\listitemsymbol}
+\newlength{\listitemmaincolumnwidth}
+\newlength{\listdoubleitemmaincolumnwidth}
+\newlength{\baseletterheight}
+
+% ---------------------------------------------------------------------------------
+
+\endinput
+%%
+%% End of file 

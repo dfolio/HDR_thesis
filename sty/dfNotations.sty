@@ -1,0 +1,157 @@
+
+%\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{dfNotations}[2014/11/27 \space v1\space dfNotations package style]
+
+
+
+\providecommand{\enquote}[1]{{``\emph{#1}''}\xspace}
+
+\newcommand*{\email}[1]{\def\@email{#1}}
+
+\newcommand*{\emaillink}[2][]{%
+  \Email\xspace \ifthenelse{\equal{#1}{}}%
+  {\href{mailto:#2}{#2}}%
+  {\href{mailto:#2}{#1}}}
+
+\newcommand{\DavidFolio}{{\bfseries D.~Folio}\xspace}
+\newcommand{\KBelharet}{\underline{K.~Belharet}\xspace}
+\newcommand{\NAmari}{\underline{N.~Amari}\xspace}
+\newcommand{\LMellal}{\underline{L.~Mellal}\xspace}
+\newcommand{\ACL}{\textsc{\small ACL}\,}
+
+
+% % MATH ** 
+
+\DeclareRobustCommand\ee{\mathop{\operator@font e}\nolimits}
+
+\DeclareRobustCommand{\Predict}[1]{{\mathord{{\widehat{#1}}}}}
+\DeclareRobustCommand{\Estim}[1]{{\mathord{{\widehat{#1}}}}}
+
+\DeclareRobustCommand{\grad}{\mathop{\operator@font{\nabla}}\nolimits}
+\DeclareRobustCommand{\Vecteur}[1]{{\mathord{{\mathbf{#1}}}}}
+\let\vector=\Vecteur
+\DeclareRobustCommand{\Matrice}[1]{{\mathord{{\mathbf{#1}}}}}
+\let\matrix=\Matrice
+\DeclareRobustCommand{\Force}[1]{{\mathord{\overrightarrow{\mathbf{#1}}}}}
+\DeclareRobustCommand{\ForceF}[1][f]{{\mathord{\vec{\mathbf{#1}}}}}
+
+\DeclareRobustCommand{\Transforme}[2]{{\mathcal{#1}\left\{{#2}\right\}}}
+\def\Laplace#1{\Transforme{L}{#1}}
+\DeclareRobustCommand{\TF}[1]{{\mathord{{\mathrm{#1}}}}}
+
+\def\Couple{\Force{t}}
+\def\Cm{\ensuremath{\Couple_{\Magn}}\xspace}
+
+\DeclareRobustCommand{\Frame}[1]{\ensuremath{\mathord{{\mathcal{R}_{#1}}}}}
+\DeclareRobustCommand{\Transformation}[3]{\ensuremath{\mathord{{{}^{#2}\mathbf{#1}_{#3}}}}}
+
+\DeclareRobustCommand{\Axe}[1][x]{\ensuremath{{\overrightarrow{#1}}}\xspace}
+\def\axeX{\Axe[x]}
+\def\axeY{\Axe[y]}
+\def\axeZ{\Axe[z]}
+
+
+\DeclareRobustCommand{\Etat}[1][x]{\ensuremath{{\Vecteur{#1}}}\xspace}
+\let\State=\Etat
+\DeclareRobustCommand{\Commande}[1][u]{\ensuremath{{\Vecteur{#1}}}\xspace}
+\DeclareRobustCommand{\Mesure}[1][y]{\ensuremath{{\Vecteur{#1}}}\xspace}
+\let\Sortie=\Mesure
+\DeclareRobustCommand{\Reference}[1][w]{\ensuremath{{\Vecteur{#1}}}\xspace}
+\DeclareRobustCommand{\Critere}[1][J]{\ensuremath{{\Vecteur{#1}}}\xspace}
+\DeclareRobustCommand{\RapportCyclique}{\ensuremath{{\tau}}\xspace}
+
+\providecommand{\degree}{\ensuremath{\mathord{^\circ}}\xspace}
+\providecommand{\setN}{{\mathord{\mathbb N}}}
+\providecommand{\IR}{{\setR}}
+\providecommand{\setR}{{\mathord{\mathbb R}}}
+\providecommand{\setZ}{{\mathord{\mathbb Z}}}
+\providecommand{\setI}{{\mathord{\mathbb I}}}
+\providecommand{\setC}{{\mathord{\mathbb C}}}
+\providecommand{\II}{\setI}
+\providecommand{\Identity}{\setI}
+\let\setId\setI
+\providecommand{\Zeros}{{\mathord\mathbb{O}}}
+
+\newcommand{\D}{{\mathord\mathrm{d}}}
+
+\newcommand{\Real}{\mathop{{\operator@font Re}}\nolimits}
+\newcommand{\Imag}{\mathop{{\operator@font Im}}\nolimits}
+\newcommand{\Mod}[1]{\left|#1\right|}
+\providecommand{\ln}{\mathop{\operator@font{ln}}\nolimits}
+
+\providecommand{\sign}{\mathop{\operator@font{sign}}\nolimits}
+\providecommand\diag{\mathop{\operator@font diag}\nolimits}
+
+
+% Macros pour definir quelques paramètres usuels
+\def\Pos{\ensuremath{\bm{p}}}
+\def\Robot{{r}}
+\def\Fluid{{f}}
+\def\eau{{\mathrm{eau}}}
+\def\glycerine{{\mathrm{gl}}}
+\def\Density{\ensuremath{\rho}}
+\def\Viscosity{\ensuremath{\eta}}
+
+\def\Vel{\ensuremath{{\bm{v}}}}
+\def\Vitesse{\ensuremath{\vec{\Vel}}}
+
+
+\def\Accel{\ensuremath{\dot\Vitesse}}
+
+\DeclareRobustCommand{\Temps}[1]{\ensuremath{{T_{\mathrm{#1}}}}\xspace}
+\def\Tprop{\Temps{prop}}
+\def\Timg{\Temps{img}}
+\def\Tsync{\Temps{sync}}
+
+\def\Transpose{{\intercal}}
+\def\REF{{\star}}
+\def\SAT{{\mathrm{sat}}}
+\def\Spire{{\mathrm{spire}}}
+
+\def\Magnetization{M}
+\def\Msat{M_\SAT}
+\def\Magnetic{b}
+\def\Magn{{\mathrm{m}}}
+\def\Bo{\ensuremath{\Force{\Magnetic}_0}\xspace}
+\def\Bobine{{\mathsf{B}}}
+
+
+\providecommand{\etal}{{\textsf{et al.}}\xspace}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newglossary{nomenclature}{sym}{sbl}{Liste des symboles}
+\newcommand{\NewSymb}[5][]{
+  % \cxset{sort/.store in=\sym@sort@cx,}
+  % \cxset{sort=#2,}
+  % \cxset{#1}
+  \expandafter\gdef\csname #2\endcsname{\gls{#2}\xspace}
+  %\expandafter\gdef\l\csname #2\endcsname{\glslink{#2}{#2}\xspace}
+  \ifx#4\@empty
+  \newglossaryentry{#2}{type=nomenclature,name=\glslink{#2}{#3},symbol={--},description={#5}, #1}
+  \else
+  \newglossaryentry{#2}{type=nomenclature,name=\glslink{#2}{#3},symbol=[\,#4\,],description={#5}, #1}
+  \fi
+}
+
+\newcommand{\NewAcro}[2]{
+  \expandafter\gdef\csname #1\endcsname{\gls{#1}\xspace}
+  %\expandafter\gdef\l\csname #1\endcsname{\glslink{#1}{#1}\xspace}
+  \newacronym{#1}{#1}{#2}
+}
+
+% \newglossary{definition}{def}{dfl}{D\'efinitions}
+% \newcommand{\NewDef}[4][]{
+% \expandafter\gdef\csname #2\endcsname{\gls{#2}\xspace}
+% \ifx#4\@empty
+% \newglossaryentry{#2}{type=definition,name=\glslink{#2}{#3},symbol={--},description={#4}, #1}
+% \else
+% \newglossaryentry{#2}{type=definition,name=\glslink{#2}{#3},symbol=[\,#4\,],description={#4}, #1}
+% \fi
+% }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Nomenclature
+\let\NoUnit=\@empty
+
+\endinput
+%%
+%% End of file 

@@ -1,0 +1,52 @@
+% !TeX encoding = UTF-8
+% !TeX spellcheck = en_US
+% !TeX program = lualatex
+
+\documentclass[a4paper,11pt,twoside,openright,onecolumn,titlepage,openbib,english]{book}
+
+% ********************************** Preamble **********************************
+% Preamble: Contains packages and user-defined commands and settings
+\input{preamble/preamble.tex}
+
+\begin{document}
+
+\frontmatter
+\thispagestyle{empty}
+\maketitle
+\clearemptydoublepage
+\tableofcontents
+\clearemptydoublepage
+\listoffigures
+\clearemptydoublepage
+\listoftables%
+
+\mainmatter
+\include{./tex/chapter01}
+\include{./tex/chapter02}
+
+\appendix
+\include{./tex/appendix_CV}
+\include{./tex/appendix_MyRef}
+
+
+\backmatter
+% bibliography, glossary and index would go here.
+%\def\bibname{References}
+\nocite{*}
+\bibliography{IEEEfull.bib,bib/dfolio.bib}
+
+
+
+
+\chapter*{Glossaires}
+
+\printglossary[type=nomenclature,style=nomenclature]
+
+\pagebreak[3]
+
+%Acronyme
+
+\printglossary[type=\acronymtype,style=list]
+%\Nomenclature[hdr_index.tex]
+
+\end{document}
