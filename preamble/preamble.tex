@@ -2,14 +2,12 @@
 % !TeX spellcheck = en_US
 % !TeX root = ../hdr_dfolio.tex
 
-\usepackage[draft]{HDRdfolio}  
-\usepackage{dfNotations}  
 
 \geometry{hmargin=2.5cm,vmargin=2cm,includeheadfoot,headheight=14pt,headsep=1.5em,footskip=1.5em}
 
 \makeglossary
-\makeindex
-\input{hdr_index.tex}
+%\makeindex
+\input{preamble/hdr_index.tex}
 
 % correct bad hyphenation here
 \hyphenation{op-tical net-works semi-conduc-tor micro-robot}
@@ -19,3 +17,12 @@
 \author{David FOLIO}
 \title{Biomedical MicroRobotics}
 \date{\today}
+
+
+\hypersetup{unicode,hyperindex=true,
+  pdfauthor=\@author,
+  pdftitle=\@title,
+  pdfsubject={HDR thesis},
+  pdflang="en_EN",
+  pdfpagelabels=true,
+  breaklinks=true,bookmarks=true,pagebackref=false}

@@ -1,27 +1,32 @@
-% !TeX root = hdr_dfolio.tex
+% !TeX root = ../hdr_dfolio.tex
 
 %\NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{HDRdfolio}[2014/11/27 \space v1\space HDR package style]
+\ProvidesPackage{HDRdfolio}[2018/01/29 \space v2\space Dfolio's HDR package style]
 
 
 \RequirePackage{ifthen,ifpdf,xspace,calc}
-\RequirePackage{ucs}
-\RequirePackage{t1enc}
+%\RequirePackage{ucs}
+%\RequirePackage{t1enc}
 %\RequirePackage[T1]{fontenc}
 %\RequirePackage[utf8x]{inputenc}
 
 \@ifpackageloaded{babel}{\@DF@Info{babel header still loaded}
-  \PassOptionsToPackage{french,american,main=english}{babel}
-}{\RequirePackage[french,american,main=english]{babel}}
-\selectlanguage{american}
+  \PassOptionsToPackage{french,main=english}{babel}
+}{\RequirePackage[french,main=english]{babel}}
+%\RequirePackage[french,main=english]{babel}
+\selectlanguage{english}
 %\selectlanguage{francais} 
 %\frenchspacing
 %\frenchbsetup{ThinSpaceInFrenchNumbers,FrenchFootnotes,AutoSpacePunctuation} % \ThinSpaceInFrenchNumbers
 %\AutoSpaceBeforeFDP
 
+%\def\findrootlanguage{%
+%   \def\rootlanguagename{english}%
+%}
+
 
 \RequirePackage{graphicx}
-\RequirePackage[unicode,breaklinks,pagebackref,hyperindex=true]{hyperref}
+
 \RequirePackage[a4paper,centering,offset=0pt,]{geometry}
 %\else
 %\RequirePackage[dvips]{graphicx}
@@ -82,6 +87,9 @@
 \AtBeginDocument{
   \@ifpackageloaded{textcomp}{\@DF@Info{textcomp package still loaded}}{\RequirePackage{textcomp}}
   \@ifpackageloaded{mathcomp}{\@DF@Info{mathcomp package still loaded}}{\RequirePackage{mathcomp}}
+  
+  \@ifpackageloaded{hyperref}{\@DF@Info{hyperref package still loaded}}{\RequirePackage{hyperref}}  
+   \@ifpackageloaded{bookmark}{\@DF@Info{bookmark package still loaded}}{\RequirePackage{bookmark}}
 }
 \@ifpackageloaded{amsmath}{\@DF@Info{amsmath package still loaded}}{\RequirePackage{amsmath}}
 \@ifpackageloaded{amsthm}{\@DF@Info{amsmath package still loaded}}{\RequirePackage{amsthm}}
@@ -92,7 +100,8 @@
 \RequirePackage{multicol}\columnseprule=0.5pt
 \RequirePackage{multirow}
 \RequirePackage{enumerate,array,tabularx}
-\RequirePackage{vmargin}					%Definition des marges
+\RequirePackage{vmargin}          %Definition des marges
+\RequirePackage{ulem}             % for uline to underline text
 
 \RequirePackage{caption}
 \RequirePackage{subfloat}
@@ -137,18 +146,6 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-
-
-
-% % Biblio
-\RequirePackage{url}
-\RequirePackage[sort&compress,square, nonamebreak,comma,numbers]{natbib}
-
-\bibliographystyle{IEEEtran}
-
-
 % ---------------------------------------------------------------------------------
 %  Listes de commandes modifiant le style des chapitres, tables des mati\`ere etc...
 % ---------------------------------------------------------------------------------
@@ -165,27 +162,48 @@
 %\setcounter{minitocdepth}{2}           % niveau de hi\'erarchisation des minitocs
 \setcounter{tocdepth}{3}               % niveau de hi\'erarchisation de la table des mati\`eres
 
-
-\providecommand{\RefChapI}{\ChapRef{1}}
-\providecommand{\RefChapII}{\ChapRef{2}}
-\providecommand{\RefChapIII}{\ChapRef{3}}
-\providecommand{\RefChapIV}{\ChapRef{4}}
-\providecommand{\RefChapV}{\ChapRef{5}}
-\providecommand{\RefAnnexeA}{\ChapRef{A}}
-\providecommand{\RefAnnexeCV}{\ChapRef{CV}}
-\providecommand{\RefAnnexeRef}{\ChapRef{Ref}}
+%\parindent1.5em
 
 \newcommand{\ChapRef}[1]{{\ref{chap:#1}}\xspace}
 %{Label #1 is associated to the value  \ref{#1} // \autoref{#1} and the page \pageref{#1}}
 \renewcommand \thechapter {\@Roman\c@chapter}
 %
-\newcommand\specialchapter@cx[2][]{\chapter[#2]{{#2}}\label{chap:#1}}
+% 
+\newcommand\specialchapter@cx[2][]{ %
+  \chapter[#2]{{#2}}\label{chap:#1}
+}
 %
-%%\RequirePackage[Lenny]{fncychap}                          % Permet de d\'efinir le style de vos en-t\^etes de chapitre
-%\RequirePackage[Glenn]{fncychap}
+\newcommand{\Chapitre}[2][]{%
+  \clearemptydoublepage%
+  %\chapter[#1]{{#1}}%
+  \thispagestyle{plain}%
+  \global\@topnum\z@
+  \@afterindentfalse
+  \renewcommand\@chapapp{\chaptername}
+  \specialchapter@cx[#1]{#2}
+  \renewcommand\@chapapp{Chap.}
+  %\vfill  \newpage%
+  \fancyhf{}
+  \fancyhead[LE]{{\scshape\footnotesize\nouppercase\leftmark}}%
+  \fancyhead[RO]{{\scshape\footnotesize\nouppercase\rightmark}}%
+  \fancyfoot[R]{\thepage}%
+  \fancyfoot[L]{{\foot@banner}}
+}
+
+\def\foot@banner{
+  \if@draft\@draft@overlay{Draft}
+  {\relsize{-2}{Version pr{\'e}liminaire de {\normalfont{\texttt{\jobname}}}}, %
+    {g\'en\'er\'ee le \today{} }
+    \hfill}
+  \else\@author
+  \fi}
+
 \RequirePackage{fncychap}
 % %From Glenn chapter style
-
+\ChNameVar{\normalsize\bfseries\Large\sf\color{chapter}}
+\ChNumVar{\larger\color{chapter}}
+\ChTitleVar{\LARGE\bfseries\scshape\color{chapter}}
+\ChRuleWidth{2pt}
 \renewcommand{\DOCH}{%
   \settoheight{\myhi}{\CTV\FmTi{Test}}
   \setlength{\py}{\baselineskip}
@@ -207,7 +225,6 @@
   {\color{chapterrule}\rule{2\RW}{\myhi}\mghrulefill{\RW}}\hskip 2pt
   \raggedleft\CTV\FmTi{#1}\par\nobreak
   \vskip 20\p@}
-
 %\renewcommand{\DOTIS}[1]{%
 %  \raggedright
 %  \CTV\FmTi{#1}\par\nobreak
@@ -227,33 +244,13 @@
 %    \DOTIS{#1}%
 %    \fi
 %}}
-\ChNameVar{\normalsize\bfseries\Large\sf\color{chapter}}
-\ChNumVar{\larger\color{chapter}}
-\ChTitleVar{\large\bfseries\scshape\color{chapter}}
-\ChRuleWidth{2pt}
 
-
-\newcommand{\Chapitre}[2][]{%
-  \clearemptydoublepage%
-  %\chapter[#1]{{#1}}%
-  \thispagestyle{plain}%
-  \global\@topnum\z@
-  \@afterindentfalse
-  \specialchapter@cx[#1]{#2}
-  %\vfill  \newpage%
-  \fancyhf{}
-  \fancyhead[LE]{\textsc {\footnotesize\nouppercase \leftmark}}%
-  \fancyhead[RO]{\textsc {\footnotesize\nouppercase \rightmark}}%
-  \fancyfoot[R]{\thepage}%
-  \fancyfoot[L]{{\foot@banner}}
+%\providecommand\theHchapter    {\arabic{chapter}}%
+\newcommand{\Appendix}{
+  \clearemptydoublepage
+  \gdef\theHchapter{\Hy@AlphNoErr{chapter}}
+  \appendix
 }
-
-\def\foot@banner{
-  \if@draft\@draft@overlay{Draft}
-  {\relsize{-2}{Version pr{\'e}liminaire de {\normalfont{\texttt{\jobname}}}}, %
-    {g\'en\'er\'ee le \today{} }
-    \hfill}\fi}
-  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % GESTION DES SECTIONS ----
 % \@startsection {NAME}{LEVEL}{INDENT}{BEFORESKIP}{AFTERSKIP}{STYLE}
@@ -309,11 +306,72 @@
 
 \newcommand{\Introduction}[1][Introduction]{\section*{#1}\sectionmark{#1}\thispagestyle{plain}}
 
+
+% ---------------------------------------------------------------------------------
+% % Biblio
+\RequirePackage{url}
+%\RequirePackage{multibib}
+%\newcites{journal,conference}{{Journals},{Conferences}}
+%\newcites{df}{David Folio Reference}
+%\RequirePackage[backend=bibtex]{biblatex}
+\RequirePackage[sort&compress,square, nonamebreak,comma,numbers]{natbib}
+
+%\bibliographystyle{IEEEtran}
+\providecommand{\doi}[1]{doi:\url{#1}}
+\providecommand{\natexlab}[1]{#1}
+\setlength{\bibhang}{\z@}
+\setlength{\bibindent}{\z@}
+\newenvironment{Mybibliography}[1]
+{
+  \bibstyle{plainnat}
+  \bibpreamble
+  \bibfont
+  %\def\bibnumfmt{#2}
+  %\renewcommand{\bibnumfmt}[1]{[#2\,##1]}
+  %\renewcommand\@biblabel[1]{[#2\,##1]}
+  \list{\@biblabel{DF\@arabic{NAT@ctr}}}%
+  { %\smaller
+    \@openbib@code
+   \@bibsetup{#1}%   
+   \usecounter{NAT@ctr}}% %% only changed here to usecounter
+   \renewcommand\newblock{\hskip .11em \@plus.33em \@minus.07em}%
+    \sloppy\clubpenalty4000\widowpenalty4000
+    \sfcode`\.=1000\relax
+    \let\citeN\cite \let\shortcite\cite
+    \let\citeasnoun\cite
+}
+{\def\@noitemerr
+  {\@latex@warning{Empty `thebibliography' environment}}%
+  \endlist}
+\newcommand{\CICL}[1]{[CICL\,\citenum{#1}]\xspace}
+\renewenvironment{thebibliography}[1]
+{\phantomsection
+  \chapter*{\bibname}%
+  \addcontentsline{toc}{chapter}{\bibname}
+  \@mkboth{\MakeUppercase\bibname}{\MakeUppercase\bibname}%
+  %\let\bibnumfmt\@empty
+  \list{\@biblabel{\@arabic{NAT@ctr}}}%
+  {\bibpreamble
+    \bibfont
+    \@openbib@code
+    \@bibsetup{#1}%
+    \usecounter{NAT@ctr}}% %% only changed here to usecounter
+  \sloppy\clubpenalty4000
+  \@clubpenalty\clubpenalty
+  \widowpenalty4000%
+  \sfcode`\.\@m}
+{\def\@noitemerr
+  {\@latex@warning{Empty `thebibliography' environment}}%
+  \endlist}
+
 % ---------------------------------------------------------------------------------
 % Glossary / list of abbreviations
-\RequirePackage[nomain,acronym,section,nonumberlist,xindy,toc]{glossaries} %nomain, if you define glossaries in a file, and you use \include{These_glossary}
-\RequirePackage[xindy]{imakeidx}
-\AtBeginDocument{\makeglossaries\makeindex}
+\RequirePackage[nomain,acronym,section,nonumberlist,toc,xindy]{glossaries} %nomain, if you define glossaries in a file, and you use \include{These_glossary}
+%\RequirePackage[xindy]{imakeidx}
+\AtBeginDocument{
+\makeglossaries
+%\makeindex
+}
 
 \RequirePackage{longtable}
 %% \Nomenclature
@@ -331,7 +389,7 @@
   % allow line wrap in the description column
   \renewenvironment{theglossary}%
   {\begin{longtable}{|l|p{\glsdescwidth}|p{\glspagelistwidth}|}}%
-    {\end{longtable}}%
+    {\end{longtable}}%,xindy
   \renewcommand{\glsgroupskip}{}% make nothing happen between groups
   % swap second and third columns
   \renewcommand*{\glossaryentryfield}[5]{%

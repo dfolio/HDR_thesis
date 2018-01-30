@@ -2,18 +2,34 @@
 % !TeX spellcheck = en_US
 % !TeX program = lualatex
 
-\documentclass[a4paper,11pt,twoside,openright,onecolumn,titlepage,openbib,english]{book}
+\documentclass[a4paper,11pt,twoside,openright,onecolumn,titlepage,openbib]{book}
+\makeatletter
+\usepackage[draft]{HDRdfolio} 
+\usepackage{dfNotations}  
 
 % ********************************** Preamble **********************************
 % Preamble: Contains packages and user-defined commands and settings
 \input{preamble/preamble.tex}
 
+
+\providecommand{\RefChapI}{\ChapRef{chapI}}
+\providecommand{\RefChapII}{\ChapRef{2}}
+\providecommand{\RefChapIII}{\ChapRef{3}}
+\providecommand{\RefChapIV}{\ChapRef{4}}
+\providecommand{\RefChapV}{\ChapRef{5}}
+\providecommand{\RefAnnexeA}{\ChapRef{A}}
+\providecommand{\RefAnnexeCV}{\ChapRef{CV}}
+\providecommand{\RefAnnexeRef}{\ChapRef{MyRef}}
+
+
+\makeatother
 \begin{document}
 
-\frontmatter
 \thispagestyle{empty}
 \maketitle
+\thispagestyle{empty}
 \clearemptydoublepage
+\frontmatter
 \tableofcontents
 \clearemptydoublepage
 \listoffigures
@@ -24,29 +40,44 @@
 \include{./tex/chapter01}
 \include{./tex/chapter02}
 
-\appendix
+\Appendix
+%\addcontentsline{toc}{part}{\appendixname}
+
 \include{./tex/appendix_CV}
 \include{./tex/appendix_MyRef}
 
 
 \backmatter
 % bibliography, glossary and index would go here.
+%
 %\def\bibname{References}
+%
+%\bibliographystyledf{plainnat}
+%\nocitedf{*}
+%\bibliographydf{bib/IEEEfull.bib,bib/dfolio.bib}
+
+\bibliographystyle{IEEEtran}
 \nocite{*}
-\bibliography{IEEEfull.bib,bib/dfolio.bib}
+\bibliography{bib/IEEEfull.bib,bib/hdr_biblio.bib}
 
 
 
 
-\chapter*{Glossaires}
 
+\def\glossaryname{Index of terms}
+\phantomsection
+\chapter*{\glossaryname}
+\addcontentsline{toc}{chapter}{\glossaryname}
 \printglossary[type=nomenclature,style=nomenclature]
 
 \pagebreak[3]
 
 %Acronyme
-
+\makeatletter
 \printglossary[type=\acronymtype,style=list]
 %\Nomenclature[hdr_index.tex]
+
+\makeatother
+
 
 \end{document}

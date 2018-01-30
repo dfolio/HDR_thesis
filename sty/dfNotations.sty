@@ -13,10 +13,10 @@
   {\href{mailto:#2}{#2}}%
   {\href{mailto:#2}{#1}}}
 
-\newcommand{\DavidFolio}{{\bfseries D.~Folio}\xspace}
-\newcommand{\KBelharet}{\underline{K.~Belharet}\xspace}
-\newcommand{\NAmari}{\underline{N.~Amari}\xspace}
-\newcommand{\LMellal}{\underline{L.~Mellal}\xspace}
+\newcommand{\DavidFolio}{{\bfseries David~Folio}\xspace}
+\newcommand{\KBelharet}{\uline{Karim~Belharet}\xspace}
+\newcommand{\NAmari}{\uline{Nabil~Amari}\xspace}
+\newcommand{\LMellal}{\uline{Lyes~Mellal}\xspace}
 \newcommand{\ACL}{\textsc{\small ACL}\,}
 
 
@@ -118,7 +118,8 @@
 
 \providecommand{\etal}{{\textsf{et al.}}\xspace}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newglossary{nomenclature}{sym}{sbl}{Liste des symboles}
+\providecommand{\nomenclaturename}{Liste des symboles}
+\newglossary{nomenclature}{sym}{sbl}{\nomenclaturename}
 \newcommand{\NewSymb}[5][]{
   % \cxset{sort/.store in=\sym@sort@cx,}
   % \cxset{sort=#2,}
