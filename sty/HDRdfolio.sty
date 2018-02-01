@@ -1,10 +1,24 @@
 % !TeX root = ../hdr_dfolio.tex
-
-%\NeedsTeXFormat{LaTeX2e}
+% !TeX encoding = UTF-8
+% !TeX program = lualatex
+\NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{HDRdfolio}[2018/01/29 \space v2\space Dfolio's HDR package style]
 
 
 \RequirePackage{ifthen,ifpdf,xspace,calc}
+\RequirePackage{ifluatex} % LuaTeX is required. Not XeTeX, dvips, or pdfTeX.
+\RequirePackage{luatex85} % Needed for compatibility when using LuaTeX 0.95 etc.
+
+\RequirePackage{pdftexcmds} % compatibility
+\ifluatex
+  % New with TeXlive 2016. Removes unnecessary File Data:
+  \pdfvariable suppressoptionalinfo 511 % writes only ID to PDF Catalog
+\else
+  \PackageError{HDRdfolio}{Must compile with LuaLaTeX 0.95+}{Sorry, LuaLaTeX only.%
+  No pdfTeX, dvips, or XeTeX.}
+\fi
+%\RequirePackage{etoolbox} % general good stuff
+
 %\RequirePackage{ucs}
 %\RequirePackage{t1enc}
 %\RequirePackage[T1]{fontenc}
@@ -26,14 +40,7 @@
 
 
 \RequirePackage{graphicx}
-
 \RequirePackage[a4paper,centering,offset=0pt,]{geometry}
-%\else
-%\RequirePackage[dvips]{graphicx}
-%\RequirePackage[breaklinks,dvipdfm,pagebackref,hyperindex=true]{hyperref}
-%\RequirePackage[dvipdfm,a4paper,centering,offset=0pt]{geometry} %,margin=2.5cm,includeheadfoot,headheight=14pt,
-%\fi
-
 
 \RequirePackage{keyval}
 \RequirePackage{xkeyval}
@@ -66,7 +73,14 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\IfDraft{\geometry{showframe}}
+\IfDraft{
+  \geometry{showframe}
+  \setlength\overfullrule{1pt}
+  \@DF@Warning{\jobname compiled using draft mode. Not for final release!}
+}
+\IfFinal{
+  \setlength\overfullrule{\z@}
+}
 % taille des liserets
 %\renewcommand{\headrulewidth}{0.5pt}
 %\renewcommand{\footrulewidth}{0.5pt}
@@ -82,15 +96,8 @@
 \relpenalty=10000       % empeche la c\'esure des \'equations
 \binoppenalty=10000
 
-
-
-\AtBeginDocument{
-  \@ifpackageloaded{textcomp}{\@DF@Info{textcomp package still loaded}}{\RequirePackage{textcomp}}
-  \@ifpackageloaded{mathcomp}{\@DF@Info{mathcomp package still loaded}}{\RequirePackage{mathcomp}}
-  
-  \@ifpackageloaded{hyperref}{\@DF@Info{hyperref package still loaded}}{\RequirePackage{hyperref}}  
-   \@ifpackageloaded{bookmark}{\@DF@Info{bookmark package still loaded}}{\RequirePackage{bookmark}}
-}
+\@ifpackageloaded{textcomp}{\@DF@Info{textcomp package still loaded}}{\RequirePackage{textcomp}}
+\@ifpackageloaded{mathcomp}{\@DF@Info{mathcomp package still loaded}}{\RequirePackage{mathcomp}}
 \@ifpackageloaded{amsmath}{\@DF@Info{amsmath package still loaded}}{\RequirePackage{amsmath}}
 \@ifpackageloaded{amsthm}{\@DF@Info{amsmath package still loaded}}{\RequirePackage{amsthm}}
 \@ifpackageloaded{amsfonts}{\@DF@Info{amsfonts package still loaded}}{\RequirePackage{amsfonts}}
@@ -125,18 +132,8 @@
 \RequirePackage{fontspec}
 \setsansfont{Calibri}
 
-\input{HDRdfolio_color.sty}
+\RequirePackage{fncychap}
 
-%\renewcommand{\sfdefault}{lmss}
-\newcommand{\Latin}[1]{\textsl{#1}}
-\newcommand{\French}[1]{\foreignlanguage{french}{\textsl{#1}}}
-\newcommand{\EFrench}[1]{\foreignlanguage{french}{\enquote{\textsl{#1}}}}
-\newcommand{\English}[1]{\foreignlanguage{english}{\textsl{#1}}}
-\newcommand{\EEnglish}[1]{``\foreignlanguage{english}{\textsl{#1}}''}
-\newcommand{\Allemand}[1]{\foreignlanguage{german}{\textsl{#1}}}
-\let\Anglais=\English
-
-\providecommand{\enquote}[1]{{``\emph{#1}''}\xspace}
 
 
 %\RequirePackage{pgf}
@@ -145,12 +142,32 @@
 \RequirePackage[author={DF}]{pdfcomment}
 
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{HDRdfolio_styles.sty}
 % ---------------------------------------------------------------------------------
 %  Listes de commandes modifiant le style des chapitres, tables des mati\`ere etc...
 % ---------------------------------------------------------------------------------
+
+\setcounter{secnumdepth}{4}            % niveau de hi\'erarchisation titres
+%\setcounter{minitocdepth}{2}           % niveau de hi\'erarchisation des minitocs
+\setcounter{tocdepth}{3}               % niveau de hi\'erarchisation de la table des mati\`eres
+
+
+\let\@afterindentfalse\@afterindenttrue
+\parindent=1.5em
+\parskip=0pt plus 1pt
+\abovedisplayskip=12pt plus 3pt minus 9pt
+\abovedisplayshortskip=0pt plus 3pt
+\belowdisplayskip=12pt plus 3pt minus 9pt
+\belowdisplayshortskip=7pt plus 3pt minus 4pt
+\topskip=10pt
+\splittopskip=10pt
+\parfillskip=0pt plus 1fil
+
+
 % Ajoute si n\'ecessaire une page blanche pour que la page suivante soit impaire (\`a droite)
-\newcommand{\clearemptydoublepage}{\markboth{}{}%
+\newcommand{\clearemptydoublepage}{\markboth{}{}\fancyhf{}%
   \ifthenelse{\isodd{\value{page}}}{\newpage{\thispagestyle{empty}}}{}\cleardoublepage\pagestyle{fancy}}
 
 %\ChNameUpperCase
@@ -158,19 +175,13 @@
 %\ChNumVar{\fontsize{60}{62}\usefont{OT1}{ptm}{m}{n}\selectfont\raggedleft}
 %\ChTitleVar{\Huge\usefont{OT1}{phv}{m}{n}\selectfont\raggedleft}
 
-\setcounter{secnumdepth}{4}            % niveau de hi\'erarchisation titres
-%\setcounter{minitocdepth}{2}           % niveau de hi\'erarchisation des minitocs
-\setcounter{tocdepth}{3}               % niveau de hi\'erarchisation de la table des mati\`eres
 
-%\parindent1.5em
-
-\newcommand{\ChapRef}[1]{{\ref{chap:#1}}\xspace}
 %{Label #1 is associated to the value  \ref{#1} // \autoref{#1} and the page \pageref{#1}}
-\renewcommand \thechapter {\@Roman\c@chapter}
+\renewcommand\thechapter{\@Roman\c@chapter}
 %
 % 
-\newcommand\specialchapter@cx[2][]{ %
-  \chapter[#2]{{#2}}\label{chap:#1}
+\newcommand\specialchapter@cx[2][\@empty]{%
+  \chapter[#2]{{#2}}\ifthenelse{\equal{#1}{}}{\label{chap:\thechapter}}{\label{chap:#1}}
 }
 %
 \newcommand{\Chapitre}[2][]{%
@@ -178,32 +189,26 @@
   %\chapter[#1]{{#1}}%
   \thispagestyle{plain}%
   \global\@topnum\z@
-  \@afterindentfalse
   \renewcommand\@chapapp{\chaptername}
   \specialchapter@cx[#1]{#2}
   \renewcommand\@chapapp{Chap.}
   %\vfill  \newpage%
   \fancyhf{}
-  \fancyhead[LE]{{\scshape\footnotesize\nouppercase\leftmark}}%
-  \fancyhead[RO]{{\scshape\footnotesize\nouppercase\rightmark}}%
-  \fancyfoot[R]{\thepage}%
-  \fancyfoot[L]{{\foot@banner}}
+  \fancyhead[LE]{{\headfootfont\leftmark}}%
+  \fancyhead[RO]{{\headfootfont\rightmark}}%
+  \fancyfoot[R]{\headfootfont\thepage}%
+  \fancyfoot[L]{{\headfootfont\foot@banner}}
 }
 
 \def\foot@banner{
   \if@draft\@draft@overlay{Draft}
-  {\relsize{-2}{Version pr{\'e}liminaire de {\normalfont{\texttt{\jobname}}}}, %
-    {g\'en\'er\'ee le \today{} }
+  {\relsize{-2}{\slshape Draft of {\normalfont{\texttt{\jobname}}}}, %
+    {build on \today{} }
     \hfill}
   \else\@author
   \fi}
 
-\RequirePackage{fncychap}
 % %From Glenn chapter style
-\ChNameVar{\normalsize\bfseries\Large\sf\color{chapter}}
-\ChNumVar{\larger\color{chapter}}
-\ChTitleVar{\LARGE\bfseries\scshape\color{chapter}}
-\ChRuleWidth{2pt}
 \renewcommand{\DOCH}{%
   \settoheight{\myhi}{\CTV\FmTi{Test}}
   \setlength{\py}{\baselineskip}
@@ -211,10 +216,10 @@
   \addtolength{\py}{\myhi}
   \setlength{\pyy}{\py}
   \addtolength{\pyy}{-1\RW}
-  
   \raggedright
   \CNV\FmN{\@chapapp}\space\CNoV\thechapter
-  \hskip 3pt\color{chapterrule}\mghrulefill{\RW}\rule[-1\pyy]{2\RW}{\py}\par\nobreak}
+  \hskip 3pt\color{chapterrule}\mghrulefill{\RW}\rule[-1\pyy]{2\RW}{\py}\par\nobreak%  \vskip 20\p@
+}
 
 \renewcommand{\DOTI}[1]{%
   \addtolength{\pyy}{-4pt}
@@ -224,7 +229,7 @@
   \vskip -1\pyy
   {\color{chapterrule}\rule{2\RW}{\myhi}\mghrulefill{\RW}}\hskip 2pt
   \raggedleft\CTV\FmTi{#1}\par\nobreak
-  \vskip 20\p@}
+  \vskip 2em plus1em minus 1ex}
 %\renewcommand{\DOTIS}[1]{%
 %  \raggedright
 %  \CTV\FmTi{#1}\par\nobreak
@@ -274,39 +279,82 @@
 \renewcommand\section{\@startsection {section}{1}{-1em}%
   {-4ex \@plus -2ex \@minus -.5ex}%
   {2.3ex \@plus.2ex}%
-  {\normalfont\Large\scshape\color{section}}}
+  {\sectionfont\color{section}}}
 \renewcommand\subsection{\@startsection{subsection}{2}{\z@}%
   {-3.25ex\@plus -1ex \@minus -.2ex}%
   {1.5ex \@plus .2ex}%
-  {\normalfont\large\bfseries\sffamily\color{subsection}}}
+  {\subsectionfont\color{subsection}}}
 \renewcommand\subsubsection{\@startsection{subsubsection}{3}{\z@}%
   {-1.25ex\@plus -0.5ex \@minus -.2ex}%
   {.5ex \@plus .1ex}%
-  {\normalfont\normalsize\bfseries\sffamily\color{subsubsection}}}
+  {\subsubsectionfont\color{subsubsection}}}
 \renewcommand\paragraph{\@startsection{paragraph}{4}{1em}%
   {-1.125ex\@plus -0.25ex \@minus -.1ex}%
   {0.25ex}%
-  {\normalfont\normalsize\bfseries\sffamily\color{paragraphparagraph}}}
+  {\paragraphfont\color{paragraphparagraph}}}
 \renewcommand\subparagraph{\@startsection{subparagraph}{5}{\parindent}%
   {3.25ex \@plus1ex \@minus .2ex}%
   {-1em}%
-  {\normalfont\normalsize\bfseries}}
+  {\subparagraphfont}}
 \renewcommand\theparagraph{\Alph{paragraph})}
 \renewcommand\thesubparagraph{\roman{subparagraph})}
 
-% Gestion des espacements dans la toc/lof et lot
-\renewcommand*\l@section{\@dottedtocline{1}{1.5em}{2.3em}}
-\renewcommand*\l@subsection{\@dottedtocline{2}{3.8em}{3.2em}}
-\renewcommand*\l@subsubsection{\@dottedtocline{3}{7.0em}{4.1em}}
-\renewcommand*\l@paragraph{\@dottedtocline{4}{10em}{5em}}
-\renewcommand*\l@subparagraph{\@dottedtocline{5}{12em}{6em}}
-
-\renewcommand*\l@figure{\@dottedtocline{1}{2em}{2.6em}}
-\renewcommand*\l@table{\@dottedtocline{1}{1.5em}{2.3em}}
 
 \newcommand{\Introduction}[1][Introduction]{\section*{#1}\sectionmark{#1}\thispagestyle{plain}}
 
 
+% ---------------------------------------------------------------------------------
+\renewcommand\tableofcontents{
+  \global\@topnum\z@
+  \phantomsection
+  \chapter*{\chapterfont\contentsname\@mkboth{\contentsname}{\contentsname}}%
+  \addcontentsline{toc}{chapter}{\contentsname}
+  \fancyhead[LE]{{\headfootfont\leftmark}}%
+  \fancyhead[RO]{{\headfootfont\rightmark}}%
+  \fancyfoot[C]{\headfootfont\thepage}%
+  \fancyfoot[L]{{\headfootfont\foot@banner}}
+  \@starttoc{toc}%
+}
+
+
+
+\renewcommand\listoffigures{
+  \global\@topnum\z@
+  \phantomsection
+  \chapter*{\listfigurename\@mkboth{\listfigurename}{\listfigurename}}%
+  \addcontentsline{toc}{chapter}{\listfigurename}
+  \fancyhead[LE]{{\headfootfont\leftmark}}%
+  \fancyhead[RO]{{\headfootfont\rightmark}}%
+  \fancyfoot[C]{\headfootfont\thepage}%
+  \fancyfoot[L]{{\headfootfont\foot@banner}}
+  \@starttoc{lof}%
+}
+\renewcommand\listoftables{
+\global\@topnum\z@
+\phantomsection
+\chapter*{\listtablename\@mkboth{\listtablename}{\listtablename}}%
+\addcontentsline{toc}{chapter}{\listtablename}
+\fancyhead[LE]{{\headfootfont\leftmark}}%
+\fancyhead[RO]{{\headfootfont\rightmark}}%
+\fancyfoot[C]{\headfootfont\thepage}%
+\fancyfoot[L]{{\headfootfont\foot@banner}}
+\@starttoc{lot}%
+}
+
+
+\let\book@l@chapter\l@chapter
+\renewcommand*\l@chapter[2]{
+  \book@l@chapter{\lchapterfont#1}{\lchapterfont#2}}
+
+\renewcommand\@dotsep{2.5}
+\renewcommand*\l@section[2]{\@dottedtocline{1}{1em}{1.5em}{\lsectionfont#1}{\lsectionfont#2}}
+\renewcommand*\l@subsection[2]{\@dottedtocline{2}{2.5em}{2em}{\lsubsectionfont#1}{\lsubsectionfont#2}}
+\renewcommand*\l@subsubsection[2]{\@dottedtocline{3}{3.5em}{2em}{\lsubsubsectionfont#1}{\subsubsectionfont#2}}
+\renewcommand*\l@paragraph[2]{\@dottedtocline{4}{10em}{5em}{\lparagraphfont#1}{\lparagraphfont#2}}
+\renewcommand*\l@subparagraph[2]{\@dottedtocline{5}{12em}{6em}{\lsubparagraphfont#1}{\lsubparagraphfont#2}}
+
+\renewcommand*\l@figure[2]{\@dottedtocline{1}{1em}{1.5em}{\lsubsectionfont#1}{\lsubsectionfont#2}}
+\renewcommand*\l@table[2]{\@dottedtocline{1}{1em}{1.5em}{\lsubsectionfont#1}{\lsubsectionfont#2}}
 % ---------------------------------------------------------------------------------
 % % Biblio
 \RequirePackage{url}
@@ -317,7 +365,7 @@
 \RequirePackage[sort&compress,square, nonamebreak,comma,numbers]{natbib}
 
 %\bibliographystyle{IEEEtran}
-\providecommand{\doi}[1]{doi:\url{#1}}
+\providecommand{\doi}[1]{{\smaller doi:\href{http://dx.doi.org/\detokenize{#1}}{\detokenize{#1}}}\xspace}
 \providecommand{\natexlab}[1]{#1}
 \setlength{\bibhang}{\z@}
 \setlength{\bibindent}{\z@}
@@ -348,7 +396,7 @@
 {\phantomsection
   \chapter*{\bibname}%
   \addcontentsline{toc}{chapter}{\bibname}
-  \@mkboth{\MakeUppercase\bibname}{\MakeUppercase\bibname}%
+  %\@mkboth{\headfootfont\bibname}{\headfootfont\bibname}%
   %\let\bibnumfmt\@empty
   \list{\@biblabel{\@arabic{NAT@ctr}}}%
   {\bibpreamble
@@ -365,55 +413,86 @@
   \endlist}
 
 % ---------------------------------------------------------------------------------
+\@ifpackageloaded{hyperref}{\@DF@Info{hyperref package still loaded}
+  %\PassOptionsToPackage{pdfpagelabels,pdfencoding=auto}{hyperref} 
+}{\RequirePackage[pdfa]{hyperref}}  
+\@ifpackageloaded{translator}{\@DF@Info{translator package still loaded}
+  %\PassOptionsToPackage{pdfpagelabels,pdfencoding=auto}{hyperref} 
+}{\RequirePackage[french,english]{translator}}  
 % Glossary / list of abbreviations
 \RequirePackage[nomain,acronym,section,nonumberlist,toc,xindy]{glossaries} %nomain, if you define glossaries in a file, and you use \include{These_glossary}
 %\RequirePackage[xindy]{imakeidx}
-\AtBeginDocument{
-\makeglossaries
-%\makeindex
-}
+
 
 \RequirePackage{longtable}
 %% \Nomenclature
-\glossarystyle{longheaderborder}
+\setglossarystyle{longheaderborder}
 \setlength{\glsdescwidth}{.75\linewidth-1em}
 
-\newglossarystyle{nomenclature}{%
-  \renewcommand*{\glossaryheader}{%
-    \hline
-    \bfseries Notation&\bfseries\descriptionname&
-    \bfseries Unit\'e\\\hline\endhead
-    \hline\endfoot}%
-  \setlength{\glsdescwidth}{.7\linewidth-1em}
-  \setlength{\glspagelistwidth}{4.5em}
-  % allow line wrap in the description column
-  \renewenvironment{theglossary}%
-  {\begin{longtable}{|l|p{\glsdescwidth}|p{\glspagelistwidth}|}}%
-    {\end{longtable}}%,xindy
-  \renewcommand{\glsgroupskip}{}% make nothing happen between groups
-  % swap second and third columns
-  \renewcommand*{\glossaryentryfield}[5]{%
-    \glsentryitem{##1}\glstarget{##1}{##2} & ##3 & ##4\\[0.5ex]\hline}
-  % sub-entries
-  \renewcommand*{\glossarysubentryfield}[6]{%
-    \glssubentryitem{##2}%
-    \glstarget{##2}{##3} &  ##4 & ##6\\}%
-  
+%Generate a list of symboles
+\providecommand{\symbolslistname}{List of symbols}
+\newglossary[slg]{symbolslist}{syi}{syg}{\symbolslistname}
+\renewcommand*{\glspostdescription}{}
+
+\providecommand{\glossaryname}{Glossary}
+\newglossary{glg}{gls}{glo}{\glossaryname}
+
+
+\providecommand{\indexlistname}{{Index of terms and notations}}
+\newcommand{\Glossaries}[1][\@empty]{%
+  \clearemptydoublepage
+  \global\@topnum\z@  
+  \phantomsection
+  \chapter*{\chapterfont\indexlistname\@mkboth{\indexlistname}{\indexlistname}}%
+  \addcontentsline{toc}{chapter}{\indexlistname}
+  \fancyhead[LE]{{\headfootfont\leftmark}}%
+  \fancyhead[RO]{{\headfootfont\rightmark}}%
+  \fancyfoot[C]{\headfootfont\thepage}%
+  \fancyfoot[L]{{\headfootfont\foot@banner}} %
+  %TODO: Nomeclature
+  %\printnoidxglossary[type=nomenclature,style=nomenclature]
+  %Acronym
+  \printnoidxglossary[type=\acronymtype,style=list]
+  %Print the glossary
+  \printnoidxglossary[type=glg,style=altlist,title=Glossary]
 }
 
-\newcommand{\Nomenclature}[1][\@empty]{%
-  \clearemptydoublepage%
-  \chapter*{Glossaires}
-  \fancyhead[LE]{\textsc{Glossaires}}%
-  \fancyhead[RO]{\textsc{Glossaires}}%
-  \cfoot{\thepage}
-  \ifx#1\@empty\relax\else\input{#1} \fi
-  %Print list of symbols
-  \printglossary[type=nomenclature,style=nomenclature]
-  \pagebreak[3]
-  %Acronyme
-  \printglossary[type=\acronymtype,style=list]
-}
+%\newglossarystyle{nomenclature}{%
+%  \renewcommand*{\glossaryheader}{%
+%    \hline
+%    \bfseries Notation&\bfseries\descriptionname&
+%    \bfseries Unit\'e\\\hline\endhead
+%    \hline\endfoot}%
+%  \setlength{\glsdescwidth}{.7\linewidth-1em}
+%  \setlength{\glspagelistwidth}{4.5em}
+%  % allow line wrap in the description column
+%  \renewenvironment{theglossary}%
+%  {\begin{longtable}{|l|p{\glsdescwidth}|p{\glspagelistwidth}|}}%
+%    {\end{longtable}}%,xindy
+%  \renewcommand{\glsgroupskip}{}% make nothing happen between groups
+%  % swap second and third columns
+%  \renewcommand*{\glossaryentryfield}[5]{%
+%    \glsentryitem{##1}\glstarget{##1}{##2} & ##3 & ##4\\[0.5ex]\hline}
+%  % sub-entries
+%  \renewcommand*{\glossarysubentryfield}[6]{%
+%    \glssubentryitem{##2}%
+%    \glstarget{##2}{##3} &  ##4 & ##6\\}%
+%  
+%}
+%
+%\newcommand{\Nomenclature}[1][\@empty]{%
+%  \clearemptydoublepage%
+%  \chapter*{Glossaires}
+%  \fancyhead[LE]{{\headfootfont\glossaryname}}%
+%  \fancyhead[RO]{{\headfootfont\glossaryname}}%
+%  \cfoot{\headfootfont\thepage}
+%  \ifx#1\@empty\relax\else\input{#1} \fi
+%  %Print list of symbols
+%  \printglossary[type=nomenclature,style=nomenclature]
+%  \pagebreak[3]
+%  %Acronyme
+%  \printglossary[type=\acronymtype,style=list]
+%}
 
 
 
@@ -446,6 +525,80 @@
 
 % ---------------------------------------------------------------------------------
 
+\let\sep\pdfx@sep
+\global\let\@author\@empty
+\global\let\@date\@empty
+\global\let\@title\@empty
+\global\let\@subject\@empty
+\global\let\@keywords\@empty
+\global\let\@copyright\@empty
+
+\gdef\title#1{\gdef\@title{#1}\gdef\pdfx@Title{#1}}
+\gdef\thetitle{\@title}
+\gdef\subject#1{\gdef\@subject{#1}\gdef\pdfx@Subject{#1}}
+\gdef\thesubject{\@subject}
+\gdef\keywords#1{\gdef\@keywords{#1}\gdef\pdfx@Keywords{#1}}
+\gdef\thekeywords{\@keywords}
+\gdef\author#1{\gdef\@author{#1}\gdef\pdfx@Author{#1}}
+\gdef\theauthor{\@author}
+\gdef\copyright#1{\gdef\@copyright{#1}}
+\gdef\thecopyright{\@copyright}
+% ---------------------------------------------------------------------------------
+%% \AtEndPreamble sets defaults and calculates layout
+%% -----------------------------------------------------------------------------
+%%
+\AtEndPreamble{
+  \makeatletter % Necessary. Why? Who knows.
+  \@DF@Info{AtEndPreamble : BEGIN}
+  
+  \ifx\@copyright\@empty\global\def\@copyright{Copyright \@backslashchar copyright \the\year "\@author"}\fi
+\begingroup
+  \xdef\hdr@xmpdata{
+    \@backslashchar Title{\@title}^^J
+    \@backslashchar Subject{\@subject}^^J
+    \@backslashchar Keywords{\@keywords}^^J
+    \@backslashchar Author{\@author}^^J
+    \@backslashchar CoverDate{\@date}^^J
+    \@backslashchar Copyright{\@copyright}^^J
+  }
+\newwrite\file
+\immediate\openout\file=\jobname.xmpdata
+\immediate\write\file{\hdr@xmpdata^^J}
+\closeout\file
+\endgroup
+
+\hypersetup{
+  pdfencoding=unicode,unicode,
+  psdextra,
+  hypertexnames=false,
+  pdflang=en-EN,
+  pdfpagelabels=true,
+  breaklinks=true,
+  bookmarks=false,
+} %hyperindex=true,pagebackref=false
+
+\@DF@Info{AtEndPreamble : END}
+  \raggedbottom  % is not the default for twoside
+  \makeatother
+}
+%%
+
+%% \AtBeginDocument finishes the setup
+%% -----------------------------------------------------------------------------
+%
+\AtBeginDocument{
+  \@DF@Info{AtBeginDocument : BEGIN}  
+  \@ifpackageloaded{bookmark}{\@DF@Info{bookmark package still loaded}}{\RequirePackage{bookmark}}
+  %\usepackage{xmpincl}
+  %\includexmp{pdfa-1b}
+  %\recomputelengths % from geometry
+  %\let\copyright\relax
+      
+  
+  \@DF@Info{def bibname}
+  \renewcommand\bibname{References}
+  \@DF@Info{AtBeginDocument : END}
+}
 \endinput
 %%
 %% End of file 

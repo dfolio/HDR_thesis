@@ -5,7 +5,9 @@
 
 \geometry{hmargin=2.5cm,vmargin=2cm,includeheadfoot,headheight=14pt,headsep=1.5em,footskip=1.5em}
 
-\makeglossary
+\usepackage{dfNotations}  
+\makenoidxglossaries
+%\makeglossary
 %\makeindex
 \input{preamble/hdr_index.tex}
 
@@ -16,13 +18,6 @@
 
 \author{David FOLIO}
 \title{Biomedical MicroRobotics}
+\subject{HDR thesis}
+\keywords{microrobotics \sep robotics \sep modeling \sep control}
 \date{\today}
-
-
-\hypersetup{unicode,hyperindex=true,
-  pdfauthor=\@author,
-  pdftitle=\@title,
-  pdfsubject={HDR thesis},
-  pdflang="en_EN",
-  pdfpagelabels=true,
-  breaklinks=true,bookmarks=true,pagebackref=false}

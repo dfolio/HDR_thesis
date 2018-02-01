@@ -3,11 +3,20 @@
 \ProvidesPackage{dfNotations}[2014/11/27 \space v1\space dfNotations package style]
 
 
-
 \providecommand{\enquote}[1]{{``\emph{#1}''}\xspace}
+%\renewcommand{\sfdefault}{lmss}
+\newcommand{\Latin}[1]{{\Latinfont#1}\xspace}
+\newcommand{\French}[1]{\foreignlanguage{french}{{\Frenchfont#1}}\xspace}
+\newcommand{\EFrench}[1]{\enquote{\French{#1}}\xspace}
+\newcommand{\English}[1]{{#1}\xspace}
+\newcommand{\EEnglish}[1]{\enquote{\English{#1}}\xspace}
+\newcommand{\Allemand}[1]{\foreignlanguage{german}{{\Germanfont#1}}\xspace}
+\let\Anglais=\English
+
+
 
 \newcommand*{\email}[1]{\def\@email{#1}}
-
+\DeclareUrlCommand\Email{\urlstyle{rm}}
 \newcommand*{\emaillink}[2][]{%
   \Email\xspace \ifthenelse{\equal{#1}{}}%
   {\href{mailto:#2}{#2}}%
@@ -19,6 +28,20 @@
 \newcommand{\LMellal}{\uline{Lyes~Mellal}\xspace}
 \newcommand{\ACL}{\textsc{\small ACL}\,}
 
+
+\providecommand{\eg}{\mbox{\itshape e.g.}\xspace}
+\providecommand{\ie}{\mbox{\itshape i.e.}\xspace}
+\providecommand{\etal}{\mbox{\Latin{et al.}}\xspace}
+%\providecommand{\etal}{{\textsf{et al.}}\xspace}
+\providecommand{\apriori}{\Latin{a priori}\xspace}
+\providecommand{\aposteriori}{\Latin{a posteriori}\xspace}
+\providecommand{\wloss}{without loss of generality}
+\providecommand{\wrt}{with respect to}
+
+
+
+\newcommand{\ChapRef}[1]{{\ref{chap:#1}}\xspace}
+\newcommand{\FigRef}[1]{{Figure\;\ref{fig:#1}}\xspace}
 
 % % MATH ** 
 
@@ -115,11 +138,7 @@
 \def\Bo{\ensuremath{\Force{\Magnetic}_0}\xspace}
 \def\Bobine{{\mathsf{B}}}
 
-
-\providecommand{\etal}{{\textsf{et al.}}\xspace}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\providecommand{\nomenclaturename}{Liste des symboles}
-\newglossary{nomenclature}{sym}{sbl}{\nomenclaturename}
 \newcommand{\NewSymb}[5][]{
   % \cxset{sort/.store in=\sym@sort@cx,}
   % \cxset{sort=#2,}
@@ -127,14 +146,18 @@
   \expandafter\gdef\csname #2\endcsname{\gls{#2}\xspace}
   %\expandafter\gdef\l\csname #2\endcsname{\glslink{#2}{#2}\xspace}
   \ifx#4\@empty
-  \newglossaryentry{#2}{type=nomenclature,name=\glslink{#2}{#3},symbol={--},description={#5}, #1}
+  \newglossaryentry{#2}{type=symbolslist,name=\protect\glslink{#2}{#3},symbol={--},description={#5}, #1}
   \else
-  \newglossaryentry{#2}{type=nomenclature,name=\glslink{#2}{#3},symbol=[\,#4\,],description={#5}, #1}
+  \newglossaryentry{#2}{type=symbolslist,name=\protect\glslink{#2}{#3},symbol=[\,#4\,],description={#5}, #1}
   \fi
 }
 
+\providecommand{\MoreInfo}{[\ldots]}
+\newcommand{\GlsSeeMore}[1]{\glsadd{#1}\glsdisp{#1}{{\MoreInfo}} }
 \newcommand{\NewAcro}[2]{
   \expandafter\gdef\csname #1\endcsname{\gls{#1}\xspace}
+  \expandafter\gdef\csname #1short\endcsname{\acrshort{#1}\xspace}
+  \expandafter\gdef\csname #1foot\endcsname{\glsadd{#1}\acrshort{#1}\footnote{\acrlong{#1}}\xspace}
   %\expandafter\gdef\l\csname #1\endcsname{\glslink{#1}{#1}\xspace}
   \newacronym{#1}{#1}{#2}
 }

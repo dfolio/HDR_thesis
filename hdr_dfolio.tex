@@ -1,34 +1,36 @@
 % !TeX encoding = UTF-8
 % !TeX spellcheck = en_US
 % !TeX program = lualatex
+%\directlua{pdf.setminorversion(6)}
+\documentclass[a4paper,11pt,twoside,openright,onecolumn,titlepage,openbib,hluatex]{book}
 
-\documentclass[a4paper,11pt,twoside,openright,onecolumn,titlepage,openbib]{book}
 \makeatletter
+\usepackage[a-3b]{pdfx}
+\pdftrue
 \usepackage[draft]{HDRdfolio} 
-\usepackage{dfNotations}  
 
 % ********************************** Preamble **********************************
 % Preamble: Contains packages and user-defined commands and settings
 \input{preamble/preamble.tex}
 
-
-\providecommand{\RefChapI}{\ChapRef{chapI}}
-\providecommand{\RefChapII}{\ChapRef{2}}
-\providecommand{\RefChapIII}{\ChapRef{3}}
+\providecommand{\RefChapI}{\ChapRef{I}}
+\providecommand{\RefChapII}{\ChapRef{II}}
+\providecommand{\RefChapIII}{\ChapRef{III}}
 \providecommand{\RefChapIV}{\ChapRef{4}}
 \providecommand{\RefChapV}{\ChapRef{5}}
 \providecommand{\RefAnnexeA}{\ChapRef{A}}
-\providecommand{\RefAnnexeCV}{\ChapRef{CV}}
-\providecommand{\RefAnnexeRef}{\ChapRef{MyRef}}
-
+\providecommand{\RefAnnexeCV}{\ChapRef{CV}}\let\RefCV\RefAnnexeCV
+\providecommand{\RefAnnexeRef}{\ChapRef{MyRef}}\let\RefMyRef\RefAnnexeRef
 
 \makeatother
+
 \begin{document}
 
 \thispagestyle{empty}
 \maketitle
 \thispagestyle{empty}
 \clearemptydoublepage
+
 \frontmatter
 \tableofcontents
 \clearemptydoublepage
@@ -37,6 +39,8 @@
 \listoftables%
 
 \mainmatter
+
+
 \include{./tex/chapter01}
 \include{./tex/chapter02}
 
@@ -48,36 +52,15 @@
 
 
 \backmatter
-% bibliography, glossary and index would go here.
-%
-%\def\bibname{References}
-%
-%\bibliographystyledf{plainnat}
-%\nocitedf{*}
-%\bibliographydf{bib/IEEEfull.bib,bib/dfolio.bib}
 
 \bibliographystyle{IEEEtran}
 \nocite{*}
 \bibliography{bib/IEEEfull.bib,bib/hdr_biblio.bib}
 
 
+\Glossaries
 
 
-
-\def\glossaryname{Index of terms}
-\phantomsection
-\chapter*{\glossaryname}
-\addcontentsline{toc}{chapter}{\glossaryname}
-\printglossary[type=nomenclature,style=nomenclature]
-
-\pagebreak[3]
-
-%Acronyme
-\makeatletter
-\printglossary[type=\acronymtype,style=list]
-%\Nomenclature[hdr_index.tex]
-
-\makeatother
 
 
 \end{document}
