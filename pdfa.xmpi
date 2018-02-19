@@ -76,7 +76,7 @@
  
  
  
- <prism:coverDate>2018-02-01</prism:coverDate>
+ <prism:coverDate>2018-02-19</prism:coverDate>
  
  
  
@@ -89,13 +89,13 @@
       </rdf:Description> 
       <rdf:Description rdf:about="" xmlns:pdfaid="http://www.aiim.org/pdfa/ns/id/"> 
          <pdfaid:part>3</pdfaid:part> 
-         <pdfaid:conformance>B</pdfaid:conformance> 
+         <pdfaid:conformance>U</pdfaid:conformance> 
       </rdf:Description> 
       <rdf:Description rdf:about="" xmlns:xmp="http://ns.adobe.com/xap/1.0/"> 
          <xmp:CreatorTool>LaTeX with hyperref package</xmp:CreatorTool> 
-         <xmp:ModifyDate>2018-02-01T11:37:28+01:00</xmp:ModifyDate> 
-         <xmp:CreateDate>2018-02-01T11:37:28+01:00</xmp:CreateDate> 
-         <xmp:MetadataDate>2018-02-01T11:37:28+01:00</xmp:MetadataDate> 
+         <xmp:ModifyDate>2018-02-19T09:52:03+01:00</xmp:ModifyDate> 
+         <xmp:CreateDate>2018-02-19T09:52:03+01:00</xmp:CreateDate> 
+         <xmp:MetadataDate>2018-02-19T09:52:03+01:00</xmp:MetadataDate> 
       </rdf:Description> 
       <rdf:Description rdf:about="" xmlns:xmpRights = "http://ns.adobe.com/xap/1.0/rights/"> 
          <xmpRights:Marked>True</xmpRights:Marked>
@@ -104,7 +104,7 @@
       </rdf:Description> 
       <rdf:Description rdf:about="" xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/"> 
          <xmpMM:DocumentID>uuid:D0E560BE-3A76-C693-ACA1-87080E92F936</xmpMM:DocumentID> 
-         <xmpMM:InstanceID>uuid:2FE616E0-7997-254B-A92A-A0E6C9DAB16E</xmpMM:InstanceID> 
+         <xmpMM:InstanceID>uuid:5D2F4FA9-8FF6-A4D4-98F4-54C049AC8D7F</xmpMM:InstanceID> 
       </rdf:Description> 
    </rdf:RDF> 
 </x:xmpmeta> 

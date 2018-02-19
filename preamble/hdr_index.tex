@@ -1,29 +1,92 @@
+% $Id$
+% !TeX spellcheck = en_US
+% !TeX root = ../hdr_dfolio.tex
+% !TeX encoding = UTF-8
+% !TeX program = lualatex
 
 % Acronym
 \NewAcro{ENSI}{\French{École Nationale Supérieur d’Ingénieurs}}
 \NewAcro{INSA}{\French{Institut National des Sciences Appliquée}}
 %\NewAcro{CVLacr}
-\def\CVL{\French{Centre Val de Loire}}
+\def\CVL{\French{\normalfont\sffamily Centre Val de Loire}}
+\newglossaryentry{glos:INSACVL}{type=glg,
+  name=INSA Centre Val de Loire,
+  description={The \INSAshort \CVL was established on 1 January 2014 following the merger of the Val de Loire ENI (National Engineering School) and Bourges ENSI (Graduate Engineering School).\glspar   
+  On the Bourges campus two engineering courses are available to students with the Industrial Risk Control (MRI) and Information Technology and Cybersecurity (STI) departments, and one apprenticeship-training course, Energy Risks and the Environment (ERE), is taught together with the Cher Chamber of Commerce and Industry (CCI) Hubert Curien CFSA (Apprentice Further Training Centre) in Bourges.}
+}
 
-\NewAcro{PRISME}{\French{Laboratoire Pluridisciplinaire de Recherche en Ing\'enierie des Syst\`emes, M\'ecanique, \'Energ\'etique}\protect\GlsSeeMore{glos:PRISME}}
+
+\NewAcro{PRISME}{\French{Laboratoire Pluridisciplinaire de Recherche en Ing\'enierie des Syst\`emes, M\'ecanique, \'Energ\'etique}\protect\glsadd{glos:PRISME}}
 \newglossaryentry{glos:PRISME}{type=glg,
   name=PRISME Laboratory,
-  description={The \PRISMEshort Laboratory is from \French{Université d'Orléa,s} and \INSAshort \CVL (EPRES 4229), \url{http://www.univ-orleans.fr/PRISME}.
-    The \PRISMEshort laboratory seeks to carry out multidisciplinary research in the general domain of engineering sciences over a broad range of subject areas, including combustion in engines, energy engineering, aerodynamics, the mechanics of materials, image and signal processing, automatic control and robotics.  }
+  description={The \PRISMEshort Laboratory is from University of Orléans  and \INSAshort \CVL (EPRES 4229), \url{http://www.univ-orleans.fr/PRISME}.\glspar   
+    The \PRISMEshort laboratory seeks to carry out multidisciplinary research in the general domain of engineering sciences over a broad range of subject areas, including combustion in engines, energy engineering, aerodynamics, the mechanics of materials, image and signal processing, automatic control and robotics. 
+     The laboratory is splited in 2 units:
+    i) Fluids, Mechanics, Materials, Energy (F2ME) and 
+    ii) Images, Robotics, Automatic control and Signal (IRAuS).
+    There are some 170 research professors, engineers, technicians and \PhD students working for this laboratory across several sites in Bourges, Orléans, Chartres, and Châteauroux.}
 }
-\NewAcro{NANOMA}{Nano-Actuators and Nano-Sensors for Medical Applications\protect\GlsSeeMore{glos:NANOMA}}
+\NewAcro{ETH}{\Allemand{Eidgenössische Technische Hochschule Zürich}} %Swiss Federal Institute of Technology in Zurich}
+\NewAcro{IRIS}{Institute of Robotics and Intelligent Systems}         %\url{http://www.iris.ethz.ch}
+\NewAcro{MSRL}{Multi-Scale Robotics Lab}
+\newglossaryentry{glos:MSRL}{type=glg,
+  name=MSRL,
+  description={\glsreset{MSRL}\gls{MSRL}  is a part of the \IRIS, a group of the Swiss Federal Institute of Technology (\ETHshort), Zurich, headed by Prof. Bradley Nelson.
+     \url{http://www.msrl.ethz.ch}
+  }
+}
+
+\NewAcro{AMiR}{Division Microrobotics and Control Engineering}
+\newglossaryentry{glos:AMiR}{type=glg,
+    name=AMiR,
+    description={\glsreset{AMiR}\gls{AMiR} (or in German \EAllemand{Abteilung für Mikrorobotik und Regelungstechnik}) of the University of Oldenburg, Germany,  headed by Prof. Dr.-Ing. Sergej Fatikov. 
+    \url{http://www.amir.uni-oldenburg.de}
+  }
+}
+
+\NewAcro{MAE}{Department of Mechanical and Automation Engineering}
+\newglossaryentry{glos:MAE}{type=glg,
+  name=MAE,
+  description={\glsreset{MAE}\gls{MAE} of the Chinese University of Hong Kong, with Prof. Li Zhang (訾雲龍).
+   \url{http://www.mae.cuhk.edu.hk}
+  }
+}
+
+
+\NewAcro{NANOMA}{Nano-Actuators and Nano-Sensors for Medical Applications}
 \newglossaryentry{glos:NANOMA}{type=glg,
   name=NANOMA project,
-  description={The \NANOMAshort project is an European project funded under FP7-ICT-2007.3.6, Micro/nanosystems, coordinated by Professor Antoine Ferreira, \French{Université d'Orléans}. The NANOMA project aims at proposing novel controlled nanorobotic delivery systems which will be designed to improve the administration of drugs in the treatment and diagnosis of breast cancer.}
+  description={The \NANOMAshort project is an European project funded under {FP7 ICT 2007.3.6}, Micro/nanosystems, coordinated by Professor Antoine Ferreira, University of Orléans , \protect\PRISMEshort Laboratory. The NANOMA project aims at proposing novel controlled nanorobotic delivery systems which will be designed to improve the administration of drugs in the treatment and diagnosis of breast cancer.}
 }
 
 \NewAcro{ANR}{\French{Agence Nationale de la Recherche}}% National Agency for Research
-\NewAcro{PIANHO}{Innovative Haptic Instrumental platform for 3D Nano-manipulation\protect\GlsSeeMore{glos:PIANHO}}
-\newglossaryentry{glos:PIANHO}{type=glg,
-  name=PIANHO project,
-  description={The \PIANHOshort project is an ANR P3N (2009) project. The objective has been to design a micromanipulation platform capable of pick, hold and place nano-objects in the synchrotron radiation beam of the ESRF, Grenoble, France.}
+\NewAcro{PHC}{\French{Partenariats Hubert Curien}}% National Agency for Research
+
+\NewAcro{PROSIT}{Robotic Platform for an Interactive Tele-echographic System}
+\newglossaryentry{glos:PROSIT}{type=glg,
+  name=PROSIT project,
+  description={The \PROSITshort project is an \ANRshort Contint program (2008) project, coordinated by Professor Pierre Vieyres, University of Orléans , \PRISMEshort Laboratory.\glspar
+    The goal is to develop an interactive and complex master-slave robotic platform for a medical diagnosis application (\ie, tele-echography) based on a well defined modular control architecture.}%
 }
 
+\NewAcro{PROTEUS}{Robotic Platform to facilitate transfer between Industries}
+\newglossaryentry{glos:PROTEUS}{type=glg,
+  name=PROTEUS project,
+  description={The \PROTEUSshort project is an \ANRshort ARPEGE program (2009) project.\glspar
+  This project  motivation was to help organizing interactions between academic and industrial partners of the french robotic community by providing suitable tools and models.
+  Especially, one goal is to create a portal for the French robotic community as embodied by the \French{GDR Robotique} and its affiliated industrial partners, in order to facilitate transfer of knowledge and problems among this community.}%
+}
+
+
+\NewAcro{PIANHO}{Innovative Haptic Instrumental platform for 3D Nano-manipulation}
+\newglossaryentry{glos:PIANHO}{type=glg,
+  name=PIANHO project,
+  description={The \PIANHOshort project is an \ANRshort P3N (2009) project.\glspar
+    The motivation of this project is to create a nanomanipulation platform   capable of pick, hold and place nano-objects in the synchrotron radiation beam of the ESRF  (Grenoble, France) via tuneable
+    tool-object interaction.}
+}
+
+\NewAcro{HETD}{Equivalent TD hours, in French \EFrench{heures équivalentes TD} (\si{\hETD}) is the reference hour to calculate the teaching  duties. The rules are as follows: \SI{1}{\hour} of course = \SI{1.5}{\hETD}, while the others, \eg, \SI{1}{\hour} of  tutorial (TD) = \SI{1}{\hour} of  practical work (TP) = \SI{1}{\hETD}.}
 
 
 \NewAcro{RMN}{r\'esonance magn\'etique nucl\'eaire}
@@ -35,10 +98,6 @@
 
 \NewAcro{MRA}{\English{Magnetic resonance angiography}}
 \NewAcro{MRI}{\English{Magnetic Resonance Imaging}}
-\NewAcro{IRIS}{Institut de Robotique et des Syst\`emes Intelligents, \url{http://www.iris.ethz.ch}}
-\NewAcro{ETH}{Institut F\'ed\'eral de Technologie de Zurich (Suisse), \url{http://www.ethz.ch}}
-\NewAcro{AMiR}{Division Microrobotics and Control Engineering de l'Universit\'e d'Oldenburg, Allemagne, dirig\'e par le professeur Sergej Fatikov, \url{http://www.amir.uni-oldenburg.de}}
-
 
 \NewAcro{DDL}{degr\'es de libert\'e}
 \NewAcro{RF}{radiofr\'equence}

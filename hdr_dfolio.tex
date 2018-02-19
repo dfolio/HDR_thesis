@@ -1,66 +1,74 @@
+% $Id$
 % !TeX encoding = UTF-8
 % !TeX spellcheck = en_US
 % !TeX program = lualatex
 %\directlua{pdf.setminorversion(6)}
-\documentclass[a4paper,11pt,twoside,openright,onecolumn,titlepage,openbib,hluatex]{book}
+% ---------------------------------------------------------------------------------
+%% Main File ----------------------------------------------------------------------
+\documentclass[a4paper,11pt,twoside,openright,onecolumn]{book}
 
 \makeatletter
-\usepackage[a-3b]{pdfx}
+\usepackage[a-3u]{pdfx}
 \pdftrue
 \usepackage[draft]{HDRdfolio} 
-
+%\usepackage[final]{HDRdfolio} 
 % ********************************** Preamble **********************************
 % Preamble: Contains packages and user-defined commands and settings
 \input{preamble/preamble.tex}
-
-\providecommand{\RefChapI}{\ChapRef{I}}
-\providecommand{\RefChapII}{\ChapRef{II}}
-\providecommand{\RefChapIII}{\ChapRef{III}}
-\providecommand{\RefChapIV}{\ChapRef{4}}
-\providecommand{\RefChapV}{\ChapRef{5}}
-\providecommand{\RefAnnexeA}{\ChapRef{A}}
-\providecommand{\RefAnnexeCV}{\ChapRef{CV}}\let\RefCV\RefAnnexeCV
-\providecommand{\RefAnnexeRef}{\ChapRef{MyRef}}\let\RefMyRef\RefAnnexeRef
 
 \makeatother
 
 \begin{document}
 
-\thispagestyle{empty}
-\maketitle
-\thispagestyle{empty}
-\clearemptydoublepage
 
+\include{./tex/titlepage}
+
+% ---------------------------------------------------------------------------------
+% FRONTMATER ----------------------------------------------------------------------
 \frontmatter
-\tableofcontents
-\clearemptydoublepage
-\listoffigures
-\clearemptydoublepage
-\listoftables%
 
+\clearemptydoublepage
+
+  
+\tableofcontents
+\listoffigures
+\listoftables%
+% ---------------------------------------------------------------------------------
+% MAINMATER -----------------------------------------------------------------------
 \mainmatter
+
 
 
 \include{./tex/chapter01}
 \include{./tex/chapter02}
 
+% ---------------------------------------------------------------------------------
+% APPENDICES ----------------------------------------------------------------------
 \Appendix
-%\addcontentsline{toc}{part}{\appendixname}
 
 \include{./tex/appendix_CV}
+
+\clearemptydoublepage
 \include{./tex/appendix_MyRef}
 
 
+\clearemptydoublepage
+% ---------------------------------------------------------------------------------
+% BACKMATTER-----------------------------------------------------------------------
 \backmatter
 
-\bibliographystyle{IEEEtran}
-\nocite{*}
+% BIBLIOGRAPHY --------------------------------------------------------------------
+\bibliographystyle{IEEEtranN}
+%\nocite{*}
 \bibliography{bib/IEEEfull.bib,bib/hdr_biblio.bib}
 
+\clearemptydoublepage
 
+% GLOSSARIES ----------------------------------------------------------------------
 \Glossaries
 
 
-
+\clearemptydoublepage
+\hbox{}\pagestyle{empty}
 
 \end{document}

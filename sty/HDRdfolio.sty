@@ -1,3 +1,4 @@
+% $Id:$
 % !TeX root = ../hdr_dfolio.tex
 % !TeX encoding = UTF-8
 % !TeX program = lualatex
@@ -6,6 +7,7 @@
 
 
 \RequirePackage{ifthen,ifpdf,xspace,calc}
+\RequirePackage{luatexbase,luacode}
 \RequirePackage{ifluatex} % LuaTeX is required. Not XeTeX, dvips, or pdfTeX.
 \RequirePackage{luatex85} % Needed for compatibility when using LuaTeX 0.95 etc.
 
@@ -24,9 +26,9 @@
 %\RequirePackage[T1]{fontenc}
 %\RequirePackage[utf8x]{inputenc}
 
-\@ifpackageloaded{babel}{\@DF@Info{babel header still loaded}
-  \PassOptionsToPackage{french,main=english}{babel}
-}{\RequirePackage[french,main=english]{babel}}
+\@ifpackageloaded{babel}{\@HDR@Info{babel header still loaded}
+  \PassOptionsToPackage{german,french,main=english}{babel}
+}{\RequirePackage[german,french,main=english]{babel}}
 %\RequirePackage[french,main=english]{babel}
 \selectlanguage{english}
 %\selectlanguage{francais} 
@@ -40,30 +42,30 @@
 
 
 \RequirePackage{graphicx}
+\RequirePackage{a4wide}
 \RequirePackage[a4paper,centering,offset=0pt,]{geometry}
 
 \RequirePackage{keyval}
 \RequirePackage{xkeyval}
 %%     ------------------------------------------------------------
-
-\newif\if@DF@verbose\@DF@verbosetrue
-\newif\if@DF@warning\@DF@warningtrue
+\newif\if@HDR@verbose\@HDR@verbosetrue
+\newif\if@HDR@warning\@HDR@warningtrue
 \newif\if@draft\@draftfalse
 \let\@df@finaltrue\@draftfalse
 \let\@df@finalfalse\@drafttrue
 
-\DeclareOptionX{verbose}[false]{\csname @DF@verbose#1\endcsname}
+\DeclareOptionX{verbose}[false]{\csname @HDR@verbose#1\endcsname}
 \DeclareOptionX{draft}[true]{\csname @draft#1\endcsname}
 \DeclareOptionX{final}[true]{\csname @finaltrue#1\endcsname}
 \ExecuteOptionsX{final=true}
 \ProcessOptionsX
 %%      Warning and info ------------------------------------------------------------
 
-\providecommand\ifVerbose[2][\relax]{\if@DF@verbose{#2}\else{#1}\fi}
-\providecommand\ifWarning[2][\relax]{\if@DF@warning{#2}\else{#1}\fi}
-\def\@DF@Warning#1{\ifWarning{\PackageWarning{HDRdfolio}{#1}}}
-\def\@DF@WarningNoLine#1{\ifWarning{\PackageWarningNoLine{HDRdfolio}{#1}}}
-\def\@DF@Info#1{\ifVerbose{%
+\providecommand\ifVerbose[2][\relax]{\if@HDR@verbose{#2}\else{#1}\fi}
+\providecommand\ifWarning[2][\relax]{\if@HDR@warning{#2}\else{#1}\fi}
+\def\@HDR@Warning#1{\ifWarning{\PackageWarning{HDRdfolio}{#1}}}
+\def\@HDR@WarningNoLine#1{\ifWarning{\PackageWarningNoLine{HDRdfolio}{#1}}}
+\def\@HDR@Info#1{\ifVerbose{%
     \typeout{***********************************************************************}
     \PackageInfo{HDRdfolio}{#1}\typeout{#1}
     \typeout{***********************************************************************}
@@ -72,20 +74,66 @@
 \def\IfFinal#1{\if@draft\relax\else{#1}\fi}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+\def\draftHrule{\relax}
 \IfDraft{
   \geometry{showframe}
-  \setlength\overfullrule{1pt}
-  \@DF@Warning{\jobname compiled using draft mode. Not for final release!}
+  \setlength\overfullrule{2pt}
+  %\showboxbreadth=50 
+  %\showboxdepth=50
+  \showboxdepth=\maxdimen
+  \showboxbreadth=\maxdimen
+  \renewcommand{\draftHrule}{{\color{gray2}\hrule height\overfullrule depth\z@}}
+  % Geometry Show Frame
+  \def\Gm@hrule{\color{yellow!33}\hrule height1pt depth\z@ width\textwidth}%
+  \def\Gm@vrule{\color{yellow!50}\vrule width0.1pt height\textheight depth\z@}%
+  \def\Gm@hruled{\color{yellow!25}\hrule height\z@ depth1pt width\textwidth}%
+  %
+  \@HDR@Warning{\jobname compiled using draft mode. Not for final release!}
 }
 \IfFinal{
   \setlength\overfullrule{\z@}
 }
-% taille des liserets
-%\renewcommand{\headrulewidth}{0.5pt}
-%\renewcommand{\footrulewidth}{0.5pt}
 
-\def\@draft@overlay#1{\tikz[remember picture,overlay]{\node[rotate=60,scale=10,text opacity=0.2] at (current page.center) {#1};}}
+\ifluatex
+\begin{luacode}
+  magentabox = function(head)
+  while head do
+  if head.id == 0 or head.id == 1 then
+  -- go through the hlists (the rows)
+  magentabox(head.head)
+  
+  -- if there's a rule after the rightskip, this is the overfull box
+  -- node id 10 == glue, glue subtype 9 is rightskip, node id 2 is a rule
+  
+  elseif head.id == 10 and head.subtype == 9 and head.next and head.next.id == 2 then
+  -- this must be an overfull box
+  local w1, w2
+  w1 = node.new("whatsit","pdf_literal")
+  w1.data = "q 1 0 1 rg"
+  w1.mode = 1
+  w2 = node.new("whatsit","pdf_literal")
+  w2.data = " Q"
+  w2.mode = 1
+  
+  w1.next = head.next -- the rule
+  head.next = w1      -- color start
+  w1.next.next = w2   -- color end
+  
+  node.slide(head)    -- adjust prev pointers
+  end
+  head = head.next
+  end
+  return true
+  end
+  luatexbase.add_to_callback("post_linebreak_filter",magentabox,"magentabox")
+\end{luacode}
+\else
+\PackageError{HDRdfolio}{Must compile with LuaLaTeX 0.95+}{Sorry, LuaLaTeX only. No pdfTeX, dvips, or XeTeX.}
+\fi
+
+% taille des liserets
+
+\def\@draft@overlay#1{\if@draft\tikz[remember picture,overlay]{\node[rotate=60,scale=10,color=yellow,text opacity=0.2] at (current page.center) {#1};}\fi}
 
 \newcommand{\reviewtimetoday}[2]{\special{!userdict begin
     /bop-hook{gsave 20 710 translate 45 rotate 0.8 setgray
@@ -93,46 +141,50 @@
       0 -12 moveto (#2) show grestore}def end}}
 
 
-\relpenalty=10000       % empeche la c\'esure des \'equations
-\binoppenalty=10000
+\@ifpackageloaded{textcomp}{\@HDR@Info{textcomp package still loaded}}{\RequirePackage{textcomp}}
+\@ifpackageloaded{mathcomp}{\@HDR@Info{mathcomp package still loaded}}{\RequirePackage{mathcomp}}
+\@ifpackageloaded{amsmath}{\@HDR@Info{amsmath package still loaded}}{\RequirePackage{amsmath}}
+\@ifpackageloaded{amsthm}{\@HDR@Info{amsmath package still loaded}}{\RequirePackage{amsthm}}
+\@ifpackageloaded{amsfonts}{\@HDR@Info{amsfonts package still loaded}}{\RequirePackage{amsfonts}}
+\@ifpackageloaded{amssymb}{\@HDR@Info{amssymb package still loaded}}{\RequirePackage{amssymb}}
+\@ifpackageloaded{bm}{\@HDR@Info{bm package still loaded}}{\RequirePackage{bm}}
 
-\@ifpackageloaded{textcomp}{\@DF@Info{textcomp package still loaded}}{\RequirePackage{textcomp}}
-\@ifpackageloaded{mathcomp}{\@DF@Info{mathcomp package still loaded}}{\RequirePackage{mathcomp}}
-\@ifpackageloaded{amsmath}{\@DF@Info{amsmath package still loaded}}{\RequirePackage{amsmath}}
-\@ifpackageloaded{amsthm}{\@DF@Info{amsmath package still loaded}}{\RequirePackage{amsthm}}
-\@ifpackageloaded{amsfonts}{\@DF@Info{amsfonts package still loaded}}{\RequirePackage{amsfonts}}
-\@ifpackageloaded{amssymb}{\@DF@Info{amssymb package still loaded}}{\RequirePackage{amssymb}}
-\@ifpackageloaded{bm}{\@DF@Info{bm package still loaded}}{\RequirePackage{bm}}
-
-\RequirePackage{multicol}\columnseprule=0.5pt
-\RequirePackage{multirow}
-\RequirePackage{enumerate,array,tabularx}
-\RequirePackage{vmargin}          %Definition des marges
+%\RequirePackage{vmargin}          %Definition des marges
 \RequirePackage{ulem}             % for uline to underline text
 
 \RequirePackage{caption}
 \RequirePackage{subfloat}
 \RequirePackage{framed}
-\RequirePackage[input-decimal-markers=.,exponent-product=\cdot,tight-spacing = true,per-mode = symbol]{siunitx}%,per-symbol=\text{~div~}
-\RequirePackage{fancyhdr,fancybox}
-\usepackage{pdfpages}   
+\RequirePackage{siunitx}%,per-symbol=\text{~div~}
+\RequirePackage{fancybox}
+\RequirePackage{pdfpages}   
 
 % % FONTs, COLOR AND styles
-\@ifpackageloaded{marvosym}{\@DF@Info{marvosym package still loaded}}{\RequirePackage{marvosym}}
-\@ifpackageloaded{xcolor}{\@DF@Info{xcolor header still loaded}
+\@ifpackageloaded{marvosym}{\@HDR@Info{marvosym package still loaded}}{\RequirePackage{marvosym}}
+\@ifpackageloaded{xcolor}{\@HDR@Info{xcolor header still loaded}
   \PassOptionsToPackage{svgnames,dvipsnames,table}{xcolor}}{\RequirePackage[svgnames,dvipsnames,table]{xcolor}}
 \RequirePackage{relsize}
 %\RequirePackage{lmodern}
 %\RequirePackage[scaled=.92]{helvet}
 \RequirePackage{aecompl,wasysym,pifont} %lmodern
-\RequirePackage{lettrine}
-\renewcommand{\LettrineTextFont}{\sffamily\scshape}
-\renewcommand{\LettrineFontHook}{\sffamily}%\fontshape{sl}
+%\RequirePackage{lettrine}
+%\renewcommand{\LettrineTextFont}{\sffamily\scshape}
+%\renewcommand{\LettrineFontHook}{\sffamily}%\fontshape{sl}
 \RequirePackage{ragged2e}
+\RequirePackage{unicode-math}
 \RequirePackage{fontspec}
+%\RequirePackage{luatexja-fontspec}
 \setsansfont{Calibri}
+%\setmathfont[
+%  Path = fonts/,
+%  Extension = .ttf
+%]{CambriaMath}
 
-\RequirePackage{fncychap}
+%\ifxetexorluatex
+%  \renewcommand*{\marvosymbol}[1]{{\fontspec{MarVoSym}\char#1}}
+%\else
+\newcommand*{\marvosymbol}[1]{{\fontfamily{mvs}\fontencoding{U}\fontseries{m}\fontshape{n}\selectfont\char#1}}
+%\fi
 
 
 
@@ -141,22 +193,67 @@
 % Annotation et commentaires
 \RequirePackage[author={DF}]{pdfcomment}
 
+\RequirePackage{fancyhdr}
 
+%\marginpar=\z@  
+
+\fancypagestyle{plain}{%
+  \fancyhf{} % clear all header and footer fields
+  \fancyfoot[C]{{\footfont\thepage}} % except the center
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{1pt}
+}
+
+\fancypagestyle{front}{%
+  \fancyhf{}%
+  \fancyfoot[C]{{\footfont\thepage}} % except the center
+  \renewcommand{\headrulewidth}{0.4pt}%
+  \renewcommand{\footrulewidth}{0.5pt}%
+  
+}
+\fancypagestyle{main}{%
+  \fancyhf{}%
+  \fancyhead[LE,RO]{{\headfont\thepage}}%
+  \fancyhead[LO]{{\headfont\nouppercase{\leftmark}}}%
+  \fancyhead[RE]{{\headfont\nouppercase{\rightmark}}}%
+  \fancyfoot[LE,RO]{\footfont\color{blue2!75!gray2!66}\foot@banner\xspace \foot@banner@draft}%
+  \renewcommand{\headrulewidth}{0.5pt}%
+  \renewcommand{\footrulewidth}{0.4pt}%
+  \IfFinal{\renewcommand{\footrulewidth}{\z@}}%
+}
+
+
+%\def\cleardoublepage{\clearpage\if@twoside \ifodd\c@page\else
+%    \hbox{}\newpage\if@twocolumn\hbox{}\newpage\fi\fi\fi}
+
+% Ajoute si n\'ecessaire une page blanche pour que la page suivante soit impaire (\`a droite)
+\newcommand{\clearemptydoublepage}{%\markboth{}{}\thispagestyle{empty}%
+  \ifthenelse{\isodd{\value{page}}}{\newpage\markboth{}{}\pagestyle{empty}}{}
+  \markboth{}{}\cleardoublepage
+  \if@mainmatter
+    \pagestyle{main}
+  \else
+    \pagestyle{front}
+  \fi}
+
+\renewcommand*\mainmatter{%
+  \clearemptydoublepage
+  \@mainmattertrue
+  \pagenumbering{arabic}
+  \raggedbottom  % is not the default for twoside
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\input{HDRdfolio_styles.sty}
 % ---------------------------------------------------------------------------------
 %  Listes de commandes modifiant le style des chapitres, tables des mati\`ere etc...
 % ---------------------------------------------------------------------------------
 
 \setcounter{secnumdepth}{4}            % niveau de hi\'erarchisation titres
-%\setcounter{minitocdepth}{2}           % niveau de hi\'erarchisation des minitocs
-\setcounter{tocdepth}{3}               % niveau de hi\'erarchisation de la table des mati\`eres
 
 
 \let\@afterindentfalse\@afterindenttrue
 \parindent=1.5em
-\parskip=0pt plus 1pt
+%\parskip=0pt plus 1pt
 \abovedisplayskip=12pt plus 3pt minus 9pt
 \abovedisplayshortskip=0pt plus 3pt
 \belowdisplayskip=12pt plus 3pt minus 9pt
@@ -164,12 +261,57 @@
 \topskip=10pt
 \splittopskip=10pt
 \parfillskip=0pt plus 1fil
+\setlength{\emergencystretch}{.5\textwidth} % not to get preposterously bad lines
 
+%\setlength{\parskip}{.5\baselineskip}
+\setlength{\medskipamount}{.75\baselineskip}
+\setlength{\bigskipamount}{1.5\baselineskip}
 
-% Ajoute si n\'ecessaire une page blanche pour que la page suivante soit impaire (\`a droite)
-\newcommand{\clearemptydoublepage}{\markboth{}{}\fancyhf{}%
-  \ifthenelse{\isodd{\value{page}}}{\newpage{\thispagestyle{empty}}}{}\cleardoublepage\pagestyle{fancy}}
+\newskip\skipfillamount             \skipfillamount              =1em plus1fill
+\newskip\sectionskipamount          \sectionskipamount          =-3em\@plus -2em \@minus -2em
+\newskip\subsectionskipamount       \subsectionskipamount       =-2em\@plus -1em \@minus -1em
+\newskip\subsubsectionskipamount    \subsubsectionskipamount    =-1em\@plus -1ex \@minus -1ex
 
+\def\HDRskip{\vspace\skipfillamount}
+\newcommand{\SkipAndBreak}[1][1]{%
+  \ifdim #1pt> 2pt
+    \vspace{\skipfillamount}%
+  \else
+    \ifdim\lastskip<#1\medskipamount\removelastskip\fi
+    \ifvmode
+       \penalty\@secpenalty%
+    \else
+      \@bsphack
+      \vadjust{\penalty\@secpenalty}%
+      \@esphack
+    \fi
+    \sloppy\clubpenalty5000\widowpenalty5000
+    \vspace{#1\medskipamount}%
+  \fi
+}
+\newskip\lineskipamount    \lineskipamount    =.51em\@plus.51em\@minus.5em
+
+\newcommand{\LineskipAndBreak}[1][1]{%%
+  \tolerance9999%
+  \hfuzz .5\p@
+  \ifvmode
+    \@nolnerr
+  \else
+    \@tempskipa\lastskip
+    \unskip
+    \penalty\HDR@lineskippenalty%
+    \ifdim\@tempskipa>#1\lineskipamount
+      \hskip\@tempskipa
+      \ignorespaces
+    \else
+      \hskip#1\lineskipamount\relax
+      \ignorespaces
+    \fi
+  \fi\penalty500
+}
+
+% ---------------------------------------------------------------------------------
+\RequirePackage{fncychap}
 %\ChNameUpperCase
 %\ChNameVar{\fontsize{14}{16}\usefont{OT1}{phv}{m}{n}\selectfont\raggedleft}
 %\ChNumVar{\fontsize{60}{62}\usefont{OT1}{ptm}{m}{n}\selectfont\raggedleft}
@@ -177,12 +319,25 @@
 
 
 %{Label #1 is associated to the value  \ref{#1} // \autoref{#1} and the page \pageref{#1}}
-\renewcommand\thechapter{\@Roman\c@chapter}
-%
+%\renewcommand\thechapter{\@Roman\c@chapter}
+\renewcommand\thechapter{{\rmfamily\bfseries\@Roman\c@chapter}}%
+
+%\def\chaptermark#
+\renewcommand*{\chaptermark}[1]{%
+  \markright{\penalty\z@%
+    \ifnum \c@secnumdepth >\m@ne%
+      \if@mainmatter
+        \chapternameshort\;\thechapter. \ %
+      \fi%
+    \fi%
+    #1}%
+}
+
 % 
 \newcommand\specialchapter@cx[2][\@empty]{%
-  \chapter[#2]{{#2}}\ifthenelse{\equal{#1}{}}{\label{chap:\thechapter}}{\label{chap:#1}}
+  \chapter[#2]{{#2}}\ifthenelse{\equal{#1}{}}{\label{chap:\@Roman\c@chapter}}{\label{chap:#1}}
 }
+\providecommand{\chapternameshort}{Chap.}
 %
 \newcommand{\Chapitre}[2][]{%
   \clearemptydoublepage%
@@ -191,22 +346,10 @@
   \global\@topnum\z@
   \renewcommand\@chapapp{\chaptername}
   \specialchapter@cx[#1]{#2}
-  \renewcommand\@chapapp{Chap.}
-  %\vfill  \newpage%
-  \fancyhf{}
-  \fancyhead[LE]{{\headfootfont\leftmark}}%
-  \fancyhead[RO]{{\headfootfont\rightmark}}%
-  \fancyfoot[R]{\headfootfont\thepage}%
-  \fancyfoot[L]{{\headfootfont\foot@banner}}
+  \renewcommand\@chapapp{\chapternameshort}
+  \chaptermark{#2}
 }
 
-\def\foot@banner{
-  \if@draft\@draft@overlay{Draft}
-  {\relsize{-2}{\slshape Draft of {\normalfont{\texttt{\jobname}}}}, %
-    {build on \today{} }
-    \hfill}
-  \else\@author
-  \fi}
 
 % %From Glenn chapter style
 \renewcommand{\DOCH}{%
@@ -228,34 +371,71 @@
   \addtolength{\myhi}{-1\RW}
   \vskip -1\pyy
   {\color{chapterrule}\rule{2\RW}{\myhi}\mghrulefill{\RW}}\hskip 2pt
-  \raggedleft\CTV\FmTi{#1}\par\nobreak
-  \vskip 2em plus1em minus 1ex}
+  \raggedleft\CTV\FmTi{#1}\par\nobreak}
 %\renewcommand{\DOTIS}[1]{%
 %  \raggedright
 %  \CTV\FmTi{#1}\par\nobreak
 %  \vskip 20\p@}
-%\def\@makechapterhead#1{ %\leftmark{#1}%
-%  \vspace*{20\p@}%
-%  {\parindent \z@ \raggedright \normalfont
-%    \ifnum \c@secnumdepth >\m@ne
-%    \if@mainmatter%%%%% Fix for frontmatter, mainmatter, and backmatter 040920
-%    \DOCH
-%    \fi
-%    \fi
-%    \interlinepenalty\@M
-%    \if@mainmatter%%%%% Fix for frontmatter, mainmatter, and backmatter 060424
-%    \DOTI{#1}%
-%    \else%
-%    \DOTIS{#1}%
-%    \fi
-%}}
+\def\@makechapterhead#1{ %\leftmark{#1}%
+  %\vspace*{20\p@}%
+  \vspace*{-0.5\sectionskipamount}
+  {\parindent\z@ 
+    \raggedright 
+    \normalfont
+    \ifnum \c@secnumdepth >\m@ne
+    \if@mainmatter%%%%% Fix for frontmatter, mainmatter, and backmatter 040920
+    \DOCH
+    \fi
+    \fi
+    \interlinepenalty\@M
+    \if@mainmatter%%%%% Fix for frontmatter, mainmatter, and backmatter 060424
+      \DOTI{#1}%
+    \else%
+      \DOTIS{#1}%
+    \fi
+    \vskip-1.5\sectionskipamount
+}}
+
+
+
 
 %\providecommand\theHchapter    {\arabic{chapter}}%
 \newcommand{\Appendix}{
   \clearemptydoublepage
   \gdef\theHchapter{\Hy@AlphNoErr{chapter}}
-  \appendix
+  
+  \providecommand{\appendixname}{Appendix}
+  \providecommand{\appendixtocname}{Appendices}
+  \providecommand{\appendixpagename}{Appendices}
+  
+  \renewcommand{\chaptername}{\appendixname}
+  \renewcommand{\chapternameshort}{App.}
+  \addtocontents{toc}{\protect\setcounter{tocdepth}{1}}
+  
+  % ---------------------------------------------------------------------------------
+  \appendix 
+  \renewcommand\@chapapp{\chapternameshort}%
+  \renewcommand\thechapter{{\rmfamily\bfseries\@Alph\c@chapter}}%
+  % ---------------------------------------------------------------------------------
+  %\appendixpage --------------------------------------------------------------------
+  \clearemptydoublepage
+  \thispagestyle{empty}%
+  \global\@topnum\z@
+  \null\vfil
+  \markboth{}{}%
+  {\centering
+    \interlinepenalty \@M
+    \hrule{}                  \par\vskip1cm
+    \partfont\appendixpagename\par\par\vskip1cm
+  \hrule{}                    \par\vskip1cm
+  }%
+  \phantomsection
+  \addtocontents{toc}{\protect\contentsline{part}{\appendixtocname}{}{\@currentHref}}
+  \vfil\clearemptydoublepage
+  \pagestyle{main}
+  % ---------------------------------------------------------------------------------
 }
+\let\Appendices\Appendix
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % GESTION DES SECTIONS ----
 % \@startsection {NAME}{LEVEL}{INDENT}{BEFORESKIP}{AFTERSKIP}{STYLE}
@@ -277,146 +457,177 @@
 %  there should be no [ALTHEADING] argument.  A sectioning command
 %  is normally defined to \@startsection + its first six arguments.
 \renewcommand\section{\@startsection {section}{1}{-1em}%
-  {-4ex \@plus -2ex \@minus -.5ex}%
-  {2.3ex \@plus.2ex}%
+  {\sectionskipamount}%
+  {2.25ex \@plus.2ex}%
   {\sectionfont\color{section}}}
 \renewcommand\subsection{\@startsection{subsection}{2}{\z@}%
-  {-3.25ex\@plus -1ex \@minus -.2ex}%
+  {\subsectionskipamount}%
   {1.5ex \@plus .2ex}%
   {\subsectionfont\color{subsection}}}
-\renewcommand\subsubsection{\@startsection{subsubsection}{3}{\z@}%
-  {-1.25ex\@plus -0.5ex \@minus -.2ex}%
+\renewcommand\subsubsection{\@startsection{subsubsection}{3}{1ex}%
+  {\subsubsectionskipamount}%
   {.5ex \@plus .1ex}%
   {\subsubsectionfont\color{subsubsection}}}
-\renewcommand\paragraph{\@startsection{paragraph}{4}{1em}%
-  {-1.125ex\@plus -0.25ex \@minus -.1ex}%
+\renewcommand\paragraph{\@startsection{paragraph}{4}{0.5\parindent}%
+  {-1.5ex\@plus -0.25ex \@minus -.1ex}%
   {0.25ex}%
-  {\paragraphfont\color{paragraphparagraph}}}
+  {\paragraphfont\color{paragraph}}}
 \renewcommand\subparagraph{\@startsection{subparagraph}{5}{\parindent}%
   {3.25ex \@plus1ex \@minus .2ex}%
   {-1em}%
   {\subparagraphfont}}
-\renewcommand\theparagraph{\Alph{paragraph})}
-\renewcommand\thesubparagraph{\roman{subparagraph})}
+
+\renewcommand\theparagraph{}%\Roman{paragraph})}
+\renewcommand\thesubparagraph{}%\alph{subparagraph})}
 
 
 \newcommand{\Introduction}[1][Introduction]{\section*{#1}\sectionmark{#1}\thispagestyle{plain}}
 
 
 % ---------------------------------------------------------------------------------
-\renewcommand\tableofcontents{
+\setcounter{tocdepth}{3}               % niveau de hi\'erarchisation de la table des mati\`eres
+\providecommand{\contentsname}{Contents}
+\renewcommand*\tableofcontents{
   \global\@topnum\z@
   \phantomsection
-  \chapter*{\chapterfont\contentsname\@mkboth{\contentsname}{\contentsname}}%
+  \chapter*{\chapterfont\contentsname}%
   \addcontentsline{toc}{chapter}{\contentsname}
-  \fancyhead[LE]{{\headfootfont\leftmark}}%
-  \fancyhead[RO]{{\headfootfont\rightmark}}%
-  \fancyfoot[C]{\headfootfont\thepage}%
-  \fancyfoot[L]{{\headfootfont\foot@banner}}
+  \chaptermark{\contentsname}
+  \fancyhead[LE,RO]{{\contentsname}}%\headfont
   \@starttoc{toc}%
 }
 
-
-
-\renewcommand\listoffigures{
+ %\setcounter{lofdepth}{2}
+ \providecommand{\listfigurename}{List of Figures}
+\renewcommand*\listoffigures{
   \global\@topnum\z@
   \phantomsection
-  \chapter*{\listfigurename\@mkboth{\listfigurename}{\listfigurename}}%
+  \chapter*{\listfigurename}%
   \addcontentsline{toc}{chapter}{\listfigurename}
-  \fancyhead[LE]{{\headfootfont\leftmark}}%
-  \fancyhead[RO]{{\headfootfont\rightmark}}%
-  \fancyfoot[C]{\headfootfont\thepage}%
-  \fancyfoot[L]{{\headfootfont\foot@banner}}
+  \chaptermark{\listfigurename}
+  \fancyhead[LE,RO]{{\headfont\listfigurename}}%
   \@starttoc{lof}%
 }
+\providecommand{\listtablename}{List of Tables}
 \renewcommand\listoftables{
-\global\@topnum\z@
-\phantomsection
-\chapter*{\listtablename\@mkboth{\listtablename}{\listtablename}}%
-\addcontentsline{toc}{chapter}{\listtablename}
-\fancyhead[LE]{{\headfootfont\leftmark}}%
-\fancyhead[RO]{{\headfootfont\rightmark}}%
-\fancyfoot[C]{\headfootfont\thepage}%
-\fancyfoot[L]{{\headfootfont\foot@banner}}
-\@starttoc{lot}%
+  \global\@topnum\z@
+  \phantomsection
+  \chapter*{\listtablename}%
+  \addcontentsline{toc}{chapter}{\listtablename}
+  \chaptermark{\listtablename}
+  \fancyhead[LE,RO]{{\headfont\listtablename}}%
+  \@starttoc{lot}%
 }
 
+% ---------------------------------------------------------------------------------
+
+\let\book@l@part\l@part
+\renewcommand*\l@part[2]{
+  \SkipAndBreak[2]
+  \book@l@part{\lpartfont#1}{\lpartfont#2}}
 
 \let\book@l@chapter\l@chapter
-\renewcommand*\l@chapter[2]{
-  \book@l@chapter{\lchapterfont#1}{\lchapterfont#2}}
+\renewcommand*\l@chapter[2]{\book@l@chapter{\lchapterfont#1}{\lchapterfont#2}}
 
 \renewcommand\@dotsep{2.5}
-\renewcommand*\l@section[2]{\@dottedtocline{1}{1em}{1.5em}{\lsectionfont#1}{\lsectionfont#2}}
-\renewcommand*\l@subsection[2]{\@dottedtocline{2}{2.5em}{2em}{\lsubsectionfont#1}{\lsubsectionfont#2}}
-\renewcommand*\l@subsubsection[2]{\@dottedtocline{3}{3.5em}{2em}{\lsubsubsectionfont#1}{\subsubsectionfont#2}}
-\renewcommand*\l@paragraph[2]{\@dottedtocline{4}{10em}{5em}{\lparagraphfont#1}{\lparagraphfont#2}}
-\renewcommand*\l@subparagraph[2]{\@dottedtocline{5}{12em}{6em}{\lsubparagraphfont#1}{\lsubparagraphfont#2}}
+\renewcommand*\l@section[2]{\@dottedtocline{1}{0.75em}{2em}{\lsectionfont#1}{\lsectionfont#2}}
+\renewcommand*\l@subsection[2]{\@dottedtocline{2}{2.em}{3em}{\lsubsectionfont#1}{\lsubsectionfont#2}}
+\renewcommand*\l@subsubsection[2]{\@dottedtocline{3}{3em}{3.5em}{\lsubsubsectionfont#1}{\lsubsubsectionfont#2}}
+%\renewcommand*\l@paragraph[2]{\@dottedtocline{4}{5em}{5em}{\lparagraphfont#1}{\lparagraphfont#2}}
+%\renewcommand*\l@subparagraph[2]{\@dottedtocline{5}{12em}{6em}{\lsubparagraphfont#1}{\lsubparagraphfont#2}}
 
-\renewcommand*\l@figure[2]{\@dottedtocline{1}{1em}{1.5em}{\lsubsectionfont#1}{\lsubsectionfont#2}}
-\renewcommand*\l@table[2]{\@dottedtocline{1}{1em}{1.5em}{\lsubsectionfont#1}{\lsubsectionfont#2}}
+\renewcommand*\l@figure[2]{\@dottedtocline{1}{1em}{2em}{\lsubsectionfont#1}{\lsubsectionfont#2}}
+\renewcommand*\l@table[2]{\@dottedtocline{1}{1em}{2em}{\lsubsectionfont#1}{\lsubsectionfont#2}}
+
+% ---------------------------------------------------------------------------------
+\let\orig@backmatter\backmatter
+
+\def\backmatter{
+\parindent=0pt
+\parskip=.9\parskip
+\baselineskip=.9\baselineskip
+\sectionskipamount=-4ex \@plus -2ex \@minus -.5ex
+\orig@backmatter
+}
 % ---------------------------------------------------------------------------------
 % % Biblio
-\RequirePackage{url}
 %\RequirePackage{multibib}
 %\newcites{journal,conference}{{Journals},{Conferences}}
 %\newcites{df}{David Folio Reference}
 %\RequirePackage[backend=bibtex]{biblatex}
 \RequirePackage[sort&compress,square, nonamebreak,comma,numbers]{natbib}
 
+\renewcommand*\newblock{\hskip .51em \@plus.25em \@minus.5em\penalty\z@}%
 %\bibliographystyle{IEEEtran}
-\providecommand{\doi}[1]{{\smaller doi:\href{http://dx.doi.org/\detokenize{#1}}{\detokenize{#1}}}\xspace}
+\let\@HDR@cite\cite
+\def\cite{\xspace\@HDR@cite}
+
+\renewcommand*{\url}[1]{\LineskipAndBreak \noindent{\smaller\ttfamily\href{\detokenize{#1}}{\detokenize{#1}}}\penalty\z@\relax\xspace}
+\newcommand*{\doi}[1]{\LineskipAndBreak \noindent{\smaller\ttfamily doi:\href{http://dx.doi.org/\detokenize{#1}}{\detokenize{#1}}}\penalty\z@\relax\xspace}
 \providecommand{\natexlab}[1]{#1}
 \setlength{\bibhang}{\z@}
 \setlength{\bibindent}{\z@}
-\newenvironment{Mybibliography}[1]
-{
-  \bibstyle{plainnat}
+\def\@biblabel#1{[\textcolor{citecolor}{\sffamily#1}]}
+
+\def\bibpreamble{
+\let\@HDR@acronymfont\acronymfont
+\renewcommand*{\acronymfont}[1]{\normalfont{##1}}
+}
+\def\bibpostamble{
+  \let\acronymfont\@HDR@acronymfont
+  \setlength{\bibhang}{\z@}
+}
+\newenvironment{Mybibliography}[1]{ %
+  \bibstyle{plainnat}\NAT@numbersfalse
+  \parindent\z@
   \bibpreamble
   \bibfont
-  %\def\bibnumfmt{#2}
-  %\renewcommand{\bibnumfmt}[1]{[#2\,##1]}
-  %\renewcommand\@biblabel[1]{[#2\,##1]}
   \list{\@biblabel{DF\@arabic{NAT@ctr}}}%
   { %\smaller
-    \@openbib@code
+   \@openbib@code
    \@bibsetup{#1}%   
    \usecounter{NAT@ctr}}% %% only changed here to usecounter
-   \renewcommand\newblock{\hskip .11em \@plus.33em \@minus.07em}%
     \sloppy\clubpenalty4000\widowpenalty4000
     \sfcode`\.=1000\relax
     \let\citeN\cite \let\shortcite\cite
     \let\citeasnoun\cite
-}
-{\def\@noitemerr
-  {\@latex@warning{Empty `thebibliography' environment}}%
-  \endlist}
-\newcommand{\CICL}[1]{[CICL\,\citenum{#1}]\xspace}
+}{%
+  \bibitem@fin
+  \bibpostamble
+  \def\@noitemerr{\@HDR@Warning{Empty `thebibliography' environment}}%
+  \endlist
+  \bibcleanup}
+
 \renewenvironment{thebibliography}[1]
 {\phantomsection
   \chapter*{\bibname}%
   \addcontentsline{toc}{chapter}{\bibname}
-  %\@mkboth{\headfootfont\bibname}{\headfootfont\bibname}%
+  %\@mkboth{\headfont\bibname}{\headfont\bibname}%
   %\let\bibnumfmt\@empty
+  \parindent\z@
+  \bibpreamble
+  \bibfont
   \list{\@biblabel{\@arabic{NAT@ctr}}}%
-  {\bibpreamble
-    \bibfont
+  {%
     \@openbib@code
     \@bibsetup{#1}%
     \usecounter{NAT@ctr}}% %% only changed here to usecounter
   \sloppy\clubpenalty4000
   \@clubpenalty\clubpenalty
   \widowpenalty4000%
-  \sfcode`\.\@m}
-{\def\@noitemerr
-  {\@latex@warning{Empty `thebibliography' environment}}%
-  \endlist}
+  \sfcode`\.\@m%
+}{%
+  \bibitem@fin
+  \bibpostamble
+  \def\@noitemerr{\@HDR@Warning{Empty `thebibliography' environment}}%
+  \endlist
+  \bibcleanup}
 
 % ---------------------------------------------------------------------------------
-\@ifpackageloaded{hyperref}{\@DF@Info{hyperref package still loaded}
-  %\PassOptionsToPackage{pdfpagelabels,pdfencoding=auto}{hyperref} 
-}{\RequirePackage[pdfa]{hyperref}}  
-\@ifpackageloaded{translator}{\@DF@Info{translator package still loaded}
+\@ifpackageloaded{hyperref}{\@HDR@Info{hyperref package still loaded}
+  \PassOptionsToPackage{pdfa,hluatex}{hyperref} 
+}{\RequirePackage[pdfa,hluatex]{hyperref}}  
+\@ifpackageloaded{translator}{\@HDR@Info{translator package still loaded}
   %\PassOptionsToPackage{pdfpagelabels,pdfencoding=auto}{hyperref} 
 }{\RequirePackage[french,english]{translator}}  
 % Glossary / list of abbreviations
@@ -445,10 +656,9 @@
   \phantomsection
   \chapter*{\chapterfont\indexlistname\@mkboth{\indexlistname}{\indexlistname}}%
   \addcontentsline{toc}{chapter}{\indexlistname}
-  \fancyhead[LE]{{\headfootfont\leftmark}}%
-  \fancyhead[RO]{{\headfootfont\rightmark}}%
-  \fancyfoot[C]{\headfootfont\thepage}%
-  \fancyfoot[L]{{\headfootfont\foot@banner}} %
+  \fancyhead[LE,RO]{{\headfont\indexlistname}}%
+  \fancyfoot[C]{\headfont\thepage}%
+  %\fancyfoot[L]{{\headfont\foot@banner}} %
   %TODO: Nomeclature
   %\printnoidxglossary[type=nomenclature,style=nomenclature]
   %Acronym
@@ -483,9 +693,9 @@
 %\newcommand{\Nomenclature}[1][\@empty]{%
 %  \clearemptydoublepage%
 %  \chapter*{Glossaires}
-%  \fancyhead[LE]{{\headfootfont\glossaryname}}%
-%  \fancyhead[RO]{{\headfootfont\glossaryname}}%
-%  \cfoot{\headfootfont\thepage}
+%  \fancyhead[LE]{{\headfont\glossaryname}}%
+%  \fancyhead[RO]{{\headfont\glossaryname}}%
+%  \cfoot{\headfont\thepage}
 %  \ifx#1\@empty\relax\else\input{#1} \fi
 %  %Print list of symbols
 %  \printglossary[type=nomenclature,style=nomenclature]
@@ -493,13 +703,20 @@
 %  %Acronyme
 %  \printglossary[type=\acronymtype,style=list]
 %}
+% ---------------------------------------------------------------------------------
+\RequirePackage{multicol}\columnseprule=0.5pt
+\RequirePackage{multirow}
+\RequirePackage{array}
+\RequirePackage{tabularx}
 
+%\renewcommand{\tabularxcolumn}[1]{>{\small}m{#1}}
+%\newcolumntype{Y}{>{\small\raggedright\arraybackslash}X}
 
 
 % ---------------------------------------------------------------------------------
 % % Lists
-\RequirePackage{enumitem}
-\setlist{noitemsep}
+\RequirePackage{enumerate,enumitem}
+\setlist{nolistsep,noitemsep}
 %\setlist[1]{\labelindent=\parindent} % < Usually a good idea
 \setlist[itemize]{leftmargin=*}
 \setlist[itemize,1]{label={\bfseries\textbullet}}
@@ -507,6 +724,14 @@
 % \renewcommand{\labelitemi}{{\bfseries\textbullet}}
 % \renewcommand{\labelitemii}{{\bfseries\textendash}}
 % \renewcommand{\labelitemiii}{\textasteriskcentered}
+
+
+\newcounter{mainmemorder}
+\newcommand{\SaveOrderCounter}{\setcounter{mainmemorder}{\value{enumi}}}
+\let\SaveOrder\SaveOrderCounter
+\newcommand{\LoadOrderCounter}{\setcounter{enumi}{\value{mainmemorder}}}
+\let\LoadOrder\LoadOrderCounter
+
 
 \newcommand*{\listitemsymbol}      {\labelitemi~}
 % lengths
@@ -539,17 +764,18 @@
 \gdef\thesubject{\@subject}
 \gdef\keywords#1{\gdef\@keywords{#1}\gdef\pdfx@Keywords{#1}}
 \gdef\thekeywords{\@keywords}
-\gdef\author#1{\gdef\@author{#1}\gdef\pdfx@Author{#1}}
-\gdef\theauthor{\@author}
+\def\author#1{\gdef\@author{#1}\gdef\pdfx@Author{#1}\gdef\HDR@Author{#1}}
+\xdef\theauthor{\@author}
 \gdef\copyright#1{\gdef\@copyright{#1}}
 \gdef\thecopyright{\@copyright}
+
 % ---------------------------------------------------------------------------------
 %% \AtEndPreamble sets defaults and calculates layout
 %% -----------------------------------------------------------------------------
 %%
 \AtEndPreamble{
   \makeatletter % Necessary. Why? Who knows.
-  \@DF@Info{AtEndPreamble : BEGIN}
+  \@HDR@Info{AtEndPreamble : BEGIN}
   
   \ifx\@copyright\@empty\global\def\@copyright{Copyright \@backslashchar copyright \the\year "\@author"}\fi
 \begingroup
@@ -567,18 +793,57 @@
 \closeout\file
 \endgroup
 
+\captionsetup{format=hang,parskip=\z@, %indention=2em,
+  font={small,sf},labelfont=bf,textfont={},width={\textwidth-1ex}}
+
+\newskip\HDRcaptionaboveamount             \HDRcaptionaboveamount=1ex plus0.5ex minus0.5ex
+\newskip\HDRcaptionbelowamount             \HDRcaptionbelowamount=1em plus1ex minus1ex
+\captionsetup[figure]{position=bottom,skip=1ex,aboveskip=\HDRcaptionaboveamount,belowskip=\HDRcaptionbelowamount}
+\captionsetup[table]{position=top,skip=1ex,aboveskip=\HDRcaptionaboveamount,belowskip=\HDRcaptionbelowamount}
 \hypersetup{
   pdfencoding=unicode,unicode,
-  psdextra,
+  psdextra,hyperindex=true,pagebackref,
   hypertexnames=false,
   pdflang=en-EN,
   pdfpagelabels=true,
   breaklinks=true,
-  bookmarks=false,
+  bookmarks=true,
+  colorlinks=true,
+  linkcolor={blue1!33!black},
+  citecolor={citecolor},
+  urlcolor= {blue2!50!black},
+  menucolor={blue1}
 } %hyperindex=true,pagebackref=false
 
-\@DF@Info{AtEndPreamble : END}
-  \raggedbottom  % is not the default for twoside
+%\pretolerance=100
+%\tolerance=200 % INITEX sets this to 10000
+%\hbadness=1000
+%\vbadness=1000
+%\linepenalty=10              %the penalty added to the badness of each line within a paragraph 
+%\hyphenpenalty=50            %the penalty for line breaking at an automatically inserted hyphen
+%\exhyphenpenalty=50          %the penalty for line breaking at an explicit hyphen 
+\binoppenalty=10000         %the penalty for breaking a line at a binary operator
+\relpenalty=10000           %the penalty for breaking a line at a relation 
+%\clubpenalty=150             %extra penalty for breaking after first line of a paragraph
+%\widowpenalty=150            %extra penalty for breaking before last line of a paragraph
+%\displaywidowpenalty=50      %extra penalty for breaking before last line before a display math
+%\brokenpenalty=100           %extra penalty for page breaking after a hyphenated line
+%\predisplaypenalty=10000     %penalty for breaking before a display
+%\doublehyphendemerits=10000  %Additional demerit added to the paragraph for each pair of consecutive lines ending in a discretionary (typically a hyphen).
+%\finalhyphendemerits=5000    %Additional demerit added if the penultimate line ends with a discretionary.
+%\floatingpenalty = 20000     %penalty for splitting an insertion
+\@secpenalty=-1000              %put before a sectional title (v)
+\newcount\HDR@lineskippenalty
+\HDR@lineskippenalty=500 
+
+
+\def\foot@banner{\scriptsize\textcopyright~\the\year, \HDR@Author.} %
+\def\foot@banner@draft{\if@draft%@draft@overlay{Draft}
+   {\tiny\slshape Draft of `{\normalfont\texttt{\jobname}}', {build on "\today"}}
+    \@draft@overlay{\bfseries\scshape Draft}
+   \fi}
+
+\@HDR@Info{AtEndPreamble : END '\@author'}
   \makeatother
 }
 %%
@@ -587,18 +852,22 @@
 %% -----------------------------------------------------------------------------
 %
 \AtBeginDocument{
-  \@DF@Info{AtBeginDocument : BEGIN}  
-  \@ifpackageloaded{bookmark}{\@DF@Info{bookmark package still loaded}}{\RequirePackage{bookmark}}
+  \@HDR@Info{AtBeginDocument : BEGIN}  
+  \@ifpackageloaded{bookmark}{\@HDR@Info{bookmark package still loaded}}{\RequirePackage{bookmark}}
   %\usepackage{xmpincl}
   %\includexmp{pdfa-1b}
   %\recomputelengths % from geometry
   %\let\copyright\relax
       
-  
-  \@DF@Info{def bibname}
+  \@HDR@Info{def bibname}
   \renewcommand\bibname{References}
-  \@DF@Info{AtBeginDocument : END}
+  \IfDraft{\reviewtimetoday{\today}{Draft Version}}
+  \@HDR@Info{AtBeginDocument : END}
 }
+
+% ---------------------------------------------------------------------------------
+\input{HDRdfolio_styles.sty}
+% ---------------------------------------------------------------------------------
 \endinput
 %%
 %% End of file 

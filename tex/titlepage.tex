@@ -1,0 +1,33 @@
+% $Id$
+% !TeX encoding = UTF-8
+% !TeX spellcheck = en_US
+% !TeX root = ../hdr_dfolio.tex
+
+% ---------------------------------------------------------------------------------
+%% The title page  ----------------------------------------------------------------
+\makeatletter
+\pagestyle{empty}
+\begin{titlepage}%
+  \parindent\z@
+  \newpage\null
+  \global\@topnum\z@
+  \vskip2em plus1fill
+  \begin{center}%
+  \sffamily
+  {\bfseries\@author}   \par\vskip2cm
+  {\large\@date}        \par\vskip2cm
+  \hrule{}              \par\vskip1cm
+  {\Huge\@title}        \par\vskip1cm
+  {\@subject}           \par\vskip1cm
+  \hrule{}              \par\vskip1cm
+  \end{center}\par\nobreak  
+  \vskip2em plus1fill
+   {\footfont\foot@banner\xspace \foot@banner@draft}
+\end{titlepage}%
+\sloppy
+\makeatother
+
+\endinput
+%% --------------------------------------------------------------------------------
+%% End of file --------------------------------------------------------------------
+
