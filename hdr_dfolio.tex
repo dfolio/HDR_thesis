@@ -15,7 +15,7 @@
 \usepackage[final]{HDRdfolio} 
 % ********************************** Preamble **********************************
 % Preamble: Contains packages and user-defined commands and settings
-\input{./tex/preamble.tex}
+\input{./tex/00_preamble.tex}
 
 \makeatother
 
@@ -23,7 +23,8 @@
 % BEGIN DOCUMENT ------------------------------------------------------------------ 
 \begin{document}
 
-\include{./tex/titlepage}
+\include{./tex/01_titlepage}
+\include{./tex/02_acknowledgements}
 
 % ---------------------------------------------------------------------------------
 % FRONTMATER ----------------------------------------------------------------------
@@ -39,16 +40,16 @@
 
 % BODY ----------------------------------------------------------------------------
 
-\include{./tex/chapter01}
-\include{./tex/chapter02}
+\include{./tex/11_chapter_I}
+\include{./tex/12_chapter_II}
 
 % ---------------------------------------------------------------------------------
 % APPENDICES ----------------------------------------------------------------------
 \Appendix
 
-\include{./tex/appendix_CV}
+\include{./tex/21_appendix_resume}
 \clearemptydoublepage
-\include{./tex/appendix_MyRef}
+\include{./tex/22_appendix_my-reference}
 
 \clearemptydoublepage
 % ---------------------------------------------------------------------------------
