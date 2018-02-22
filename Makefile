@@ -14,11 +14,12 @@
 
 
 GTEX=$(wildcard *.tex)
-DOCS=$(GTEX:%.tex=% )
+DOCS=$(GTEX:%.tex=%)
 
 FIGDIR=fig
 STYDIR=sty
 OUTDIR=out
+SUBDIRS=bib  fig  fonts sty  tex
 #########################################################################
 ECHO_E=echo -e
 RM=rm -f
@@ -94,10 +95,18 @@ RERUNBIB = "No file.*\.bbl|Citation.*undefined"
 RERUNGLO = "(Package glosstex.*There were undefined terms|.*glosstex.*(\(re\))?run GlossTeX)"
 BADBOX = "(([Uu]nder|[Oover])full|\\[hv]box)"
 
-CLEAN_FILES= *~ *.log \
+TAR=/bin/tar 
+TODAY=$(shell date +"%F")
+
+
+CLEAN_PATTERNS      := *~ *.bak\
 	*.blg *.brf *.cb *.ind *.idx *.ilg  \
-  *.inx  *.toc *.lof *.out *.glx *.gxs *.gxg *.glo *.rel *.ptc *.upa *.upb *.xmpdata
-DISTCLEAN_FILES=*.aux *.ind *.gls *.ps *.dvi *.bbl *.toc *.lof *.lot *.ist *.xmpi
+  *.inx  *.toc *.lof *.out *.glx *.gxs *.gxg *.glo \
+  *.rel *.ptc *.upa *.upb *.xmpdata
+CLEAN_FILES         :=$(foreach DIR,$(SUBDIRS),$(addprefix $(DIR)/,$(CLEAN_PATTERNS)))
+DISTCLEAN_PATTERNS  :=*.aux *.log  *.ind *.gls *.ps *.dvi *.bbl *.toc *.lof *.lot *.ist *.xmpi *.synctex.gz 
+DISTCLEAN_FILES     :=$(foreach DIR,$(SUBDIRS),$(addprefix $(DIR)/,$(DISTCLEAN_PATTERNS))) \
+  $(EPUB) $(HTML) $(PDF) out/*
 
 .SUFFIXES:.sty .pdf .aux .tex \
 	   .bbl \
@@ -105,10 +114,15 @@ DISTCLEAN_FILES=*.aux *.ind *.gls *.ps *.dvi *.bbl *.toc *.lof *.lot *.ist *.xmp
 	   .png .tif .gif .jpg .pbm .pgm .ppm .dvi .fig \
      $(SUFFIXES)
 
-.PHONY: all clean pdf view check clean distclean
+.PHONY: all clean pdf view check clean distclean dist
 #target command
 all:pdf
 	@$(ECHO_E) "\n***\n*** build $(TARGET) succeed\n"
+
+
+# This pseudo-target produces the distribution archives.
+dist: distclean
+	$(TAR) czf ../$(TODAY)_$(DOCS).tar.gz .
 
 view: $(PDF)
 	@xdg-open  $(PDF)
@@ -192,19 +206,23 @@ phtml:$(TEX_DEPS)
 #|gawk -v script=log -v full=$full -f vc-git.awk >
 #git --no-pager log -1 HEAD --pretty=format:"Hash: %H%nAbr. Hash: %h%nParent Hashes: %P%nAbr. Parent Hashes: %p%nAuthor Name: %an%nAuthor Email: %ae%nAuthor Date: %ai%nCommitter Name: %cn%nCommitter Email: %ce%nCommitter Date: %ci%n"
 info:
-	@$(ECHO_E) -e " DOCS: $(DOCS) "
+	@$(ECHO_E) -e " $(TODAY) -----------------------------------------------------"
+	@$(ECHO_E) -e " DOCS: '$(DOCS)' "
 	@$(ECHO_E) -e "  TEX: $(TEX)"
-	@$(ECHO_E) -e "  INCLUDES: $(INCLUDES_TEX)"
-	@$(ECHO_E) -e "   MD: $(MDFILES)"
-	@$(ECHO_E) -e "  STY: $(STYFILES)"
-	@$(ECHO_E) -e "  FIG: $(FIGFILES)"
-	@$(ECHO_E) -e "  BIBFILES: $(BIBFILES)"
+	@$(ECHO_E) -e "        INCLUDES: $(INCLUDES_TEX)"
+	@$(ECHO_E) -e "              MD: $(MDFILES)"
+	@$(ECHO_E) -e "             STY: $(STYFILES)"
+	@$(ECHO_E) -e "             FIG: $(FIGFILES)"
+	@$(ECHO_E) -e "        BIBFILES: $(BIBFILES)"
+	@$(ECHO_E) -e "     CLEAN_FILES: $(CLEAN_FILES)"
+	@$(ECHO_E) -e " DISTCLEAN_FILES: $(DISTCLEAN_FILES)"
 
 clean:
-	$(RM)  $(CLEAN_FILES)
 	@$(ECHO_E) "\n\n***\n***  clean document\n"
+	$(RM)  $(CLEAN_FILES)
 
 distclean:clean
-	$(RM)  $(DISTCLEAN_FILES)
 	@$(ECHO_E) "\n\n***\n***  distclean document\n"
+	$(RM)  $(DISTCLEAN_FILES)
+	
 
