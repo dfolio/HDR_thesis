@@ -5,10 +5,16 @@
 
 % ---------------------------------------------------------------------------------
 %% My (long) resume ---------------------------------------------------------------
-\Chapitre[CV]{Resume}
+\chapter{Resume}\label{chap:CV}
 \glsadd{MRI}
 \glsadd{PRISME}
 
+\newlist{CV}{description}{10}
+\setlist[CV]{format={\sffamily\bfseries}}
+\setlist[CV,1]{format={\sffamily\bfseries},align=parright,leftmargin=2.cm,labelwidth=!,topsep=1.5em,parsep=1.5ex}
+\setlist[CV,2]{format={\sffamily},labelindent=-1.5cm,align=parright,leftmargin=0.5cm,labelwidth=!}
+\newlist{CVlist}{enumerate}{2}
+\setlist[CVlist]{leftmargin=3em,format={\sffamily\bfseries\smaller\color{blue2}}}
 \HDRskip
 %\vspace*{-2em}
 
@@ -50,83 +56,58 @@
 
 % ---------------------------------------------------------------------------------
 % SECTION -------------------------------------------------------------------------
-\section{Curriculum Vit\ae}
+\section{Curriculum Vitæ}
 
 
 \subsection{Current position and responsibilities}
 \noindent
-\begin{tabularx}{\linewidth-1em}{@{}>{\raggedleft}p{3.133\parindent}@{\hspace{2ex}}X@{}}
-  \datestyle {Since 2008} 
-  & \degreestyle{Associate Professor} \French{(ma\^itre de conférences,  61\up{\`eme} CNU section)}\newline
-  \affiliationstyle{{\INSA \CVL}, {Universit\'e d'Orl\'eans}, {\PRISME Laboratory EA 4229} {Bourges, France}} %\newline
-  \begin{description}
-    \smaller
-    \item[Teaching]  { member of the teaching team of the Industrial Risk Control (MRI\footnote{In French \French{Ma\^itrise des Risques Industriels (MRI)}.}), of the Energy, Risks, and Environment (ERE),  and of the Sciences and Techniques for Engineers (STPI\footnote{In French \French{Science et Technique pour l'Ingénieur (STPI)}.}) departments;}
-    \item[Research] member of the Robotic team of the IRAuS unit of \PRISME Laboratory
-  \end{description}
-  %& {\smaller \textbf{\sffamily Teaching}: \\
- % & {\smaller \textbf{\sffamily {Research}}: member of the Robotic team of the IRAuS unit of \PRISME Laboratory.} 
-  \\[1ex]
-  \datestyle {Since 2014}
-  & { in charge of the Nuclear Energy option of the 5\up{th} year (engineer's degree) of the Industrial Risk Control (MRI) department.}\\[1ex]
-  \datestyle {Since 2017}
-  & {  referent of \enquote{racism and antisemitism}.}\\[1ex]
-  \datestyle {Since 2017}
-  & {elected  member of the Energy, Risks and Environment (ERE) department council.}
-\end{tabularx}
-\par\nobreak\bigskip
+\begin{CV}
+  \item[Since 2008] \textbf{Associate Professor} \French{(ma\^itre de conférences,  61\up{st} CNU\footnote{\label{foot:CV:CNU}\French{Conseil national des universités} (CNU). \url{http://www.cpcnu.fr}} section)}
+  \begin{CV}
+    \item[Affiliation] \INSA \CVL, Université d'Orléans, \PRISMEshort Laboratory EA 4229, Bourges,    France.
+    \item[Teaching]  member of the teaching team of the Industrial Risk Control  (MRI\footnote{From French \French{Maîtrise des Risques Industriels (MRI)}.}) of the Energy, Risks, and Environment (ERE), and of the Sciences and Techniques for Engineers (STPI\footnote{From French \French{Science et Technique pour l'Ingénieur (STPI)}.}) departments.
+    \item[Research] member of the Robotic team of the IRAuS unit of \PRISMEshort Laboratory.
+  \end{CV}
+
+  \item[Since 2014]  in charge of the Nuclear Energy option of the 5\up{th} year (engineer's degree) of the Industrial Risk Control (MRI) department.
+  
+  \item[Since 2017] 
+  \begin{itemize}
+    \item referent of \enquote{racism and antisemitism}.
+    \item elected  member of the council of the Energy, Risks and Environment (ERE) department.
+  \end{itemize}
+\end{CV}
 
 %\vspace*{-2em}
 \subsection{Experience and Graduate Education}
 \noindent
-\begin{tabularx}{\linewidth-1em}{@{}>{\raggedleft}p{3.133\parindent}@{\hspace{2ex}}X@{}}
- \datestyle {Oct.\,2007 Aug.\,2008} 
-    & \degreestyle{Post-Doctorate}  
-    {at Inria de Rennes Bretagne Atlantique\footnote{French Institute for Research in Computer Science and Automation (French: \French{Institut national de recherche en informatique et en automatique}).  \url{https://www.inria.fr/centre/rennes}}, {Rennes, France}} \newline
-     {\smaller Research conducted in Lagadic team, supervised by François Chaumette.}
-  \\[1ex]
-  \datestyle {Feb.\,2007 Aug.\,2007} 
-    & \degreestyle{Teaching assistant}: {\smaller\French{Attaché Temporaire d'Enseignement et de Recherche (ATER)}}
-    {at Paul Sabatier University of Toulouse, {France}} 
-  \\[1ex]
-  \datestyle {Feb.\,2004 Jul.\,2007} 
-    & \degreestyle{Doctorate}
-    {at LAAS-CNRS, {Toulouse, France}} \newline
-    {\smaller \PhD Thesis in Robotic control, directed by Viviane Cadenat, entitled
-      \enquote{Multi-sensor-based control strategies and visual signal loss management for
-        mobile robots navigation}.}
-  \\[1ex]
-  \datestyle {2003--2004} 
-  & \degreestyle{Master of Science} \French{(DESS)} Intelligent Systems
-  {at Paul Sabatier University of Toulouse, {France}} 
-  \\[1ex]  
-  \datestyle {2002--2003} 
-  & \degreestyle{Master of Advanced Studies} \French{(DEA)} Computer Sciences
-  {at Paul Sabatier University of Toulouse, {France}} 
-  \\[1ex]
-  \datestyle {1999--2002} 
-  & Scholarship \French{(IUP\footnote{In French \French{Institut Universitaire Professionnalisé} (IUP)}, L2-M1)} on Intelligent Systems
-  {at Paul Sabatier University of Toulouse, {France}} 
-  \\[1ex]
-\datestyle {1997--1999} 
-& \degreestyle{Bachelor's degree} \French{(DEUG, L1-L2)} in Science and Technology for the Engineer,
-{at University of Reunion Island, {France}} 
-\end{tabularx}
-
+\begin{CV}
+  \item[Oct.\,2007 Aug.\,2008] {Post-Doctorate}  
+    {at Inria de Rennes Bretagne Atlantique\footnote{French Institute for Research in Computer Science and Automation (French: \French{Institut national de recherche en informatique et en automatique}).  \url{https://www.inria.fr/centre/rennes}}, {Rennes, France}}. \newline
+     {\smaller Research on , in on sensory control for unmanned aerial vehicles conducted in Lagadic team, supervised by François Chaumette.}
+     
+  \item[Feb.\,2007 Aug.\,2007] {Teaching assistant}: {\smaller\French{Attaché Temporaire d'Enseignement et de Recherche (ATER)}} {at Paul Sabatier University of Toulouse, {France}}.
+  
+  \item[Feb.\,2004 Aug.\,2007] {Doctorate} {at LAAS-CNRS, {Toulouse, France}} \newline
+  {\smaller \PhD Thesis in Robotic control, directed by Viviane Cadenat, entitled \enquote{Multi-sensor-based control strategies and visual signal loss management for mobile robots navigation}.}
+  
+  \item[2003--2004] {Master of Science} \French{(DESS)} Intelligent Systems  {at Paul Sabatier University of Toulouse, {France}}.
+  \item[2002--2003] {Master of Advanced Studies} \French{(DEA)} Computer Sciences {at Paul Sabatier University of Toulouse, {France}}.
+  \item[1999--2002] Scholarship \French{(IUP\footnote{In French \French{Institut Universitaire Professionnalisé} (IUP)}, L2-M1)} on Intelligent Systems  {at Paul Sabatier University of Toulouse, {France}}.
+  \item[1997--1999] {Bachelor's degree} \French{(DEUG, L1-L2)} in Science and Technology for the Engineer,
+  {at University of Reunion Island, {France}} 
+\end{CV}
 
 \subsection{Professional Activities}
 \noindent
-\begin{tabularx}{\linewidth-1em}{@{}>{\raggedleft}p{3.133\parindent}@{\hspace{2ex}}X}
-  \datestyle{Since 2015}
-    &{Member of the program committee of the \emph{International Conference on Robotics, Manipulation, and Automation at Small Scales} (MARSS)} \\
-  \datestyle{Since 2013}
-    &{Editorial Board member of the \emph{International Journal of Advanced Robotic Systems} (IJARS).}\\
-  \datestyle{Since 2005}
-    &{IEEE member (SM'05, AM'08, M'12)}\\[2ex]
-  \datestyle{Regular Reviewer}
-  &\vspace*{-1ex} %\relsize{-0.5}
+\begin{CV}
+  \item[Since 2015]  Member of the program committee of the \emph{International Conference on Robotics, Manipulation, and Automation at Small Scales} (MARSS)
+  \item[Since 2013] Editorial Board member of the \emph{International Journal of Advanced Robotic Systems} (IJARS).
+  \item[Since 2005] IEEE member (SM'05, AM'08, M'12).
+  \item[Regular Reviewer] 
   \begin{itemize}
     \item \emph{IEEE Transactions on Robotics} (TRO);
+    %\vspace{-1.5ex}
     \item \emph{IEEE Transactions on Biomedical Engineering} (TBME);
     \item \emph{{IEEE/ASME} Transactions on Mechatronics} (TMECH);
     \item \emph{{IEEE} Transactions on Automation Science and Engineering} (TASE);
@@ -139,12 +120,12 @@
     %\item Conf\'erence Internationale Francophone d'Automatique (CIFA);
     % \item {IEEE} Engineering in Medicine and Biology Society (EMBC);
     %\item International Conference on Biomedical Engineering and Biotechnologie (iCBEB);
-  \end{itemize}\\  
-  \datestyle{Awards} & French outstanding research award (PEDR 2014-2018)
-\end{tabularx}
+  \end{itemize}
 
+  \item[Awards] French outstanding research award (PEDR 2014-2018)
+\end{CV}
 
-\HDRskip
+\SkipAndBreak
 
 %\pagebreak[3]
 
@@ -155,7 +136,7 @@
 
 \subsection{Teaching}
 
-My overall teaching activities  have been solely related with the 61\up{st} CNU section\footnote{\label{foot:CV:CNU}\French{Conseil national des universités} (CNU). \url{http://www.cpcnu.fr}} which regroups scientific disciplines from control, computer engineering and signal processing.
+My overall teaching activities  have been solely related with the 61\up{st} CNU section which regroups scientific disciplines from control, computer engineering and signal processing.
 I taught these teaching as a temporary teacher (\SI{3}{\years}), teaching assistant (ATER, \SI{1}{\year}), and then as associate professor (\SI{10}{\years}).
 These different experiences are presented in the following.
 
@@ -174,7 +155,7 @@ This first experience confirmed my interest in teaching, leading me logically to
 
 \subsubsection{Since tenured}
 \glsreset{INSA}
-I was recruited as Associate Professor  in September 2008 for the 61\up{st} CNU\footnoteref{foot:CV:CNU} section.
+I was recruited as Associate Professor  in September 2008 for the 61\up{st} CNU section.
 Untill now, my teaching activities have been mainly held at  \INSA \CVL on the Bourges campus.
 The \INSA \CVL was established in 2014 following the merger of the Val de Loire ENI (National Engineering School) and Bourges ENSI (Graduate Engineering School).
 With 200 members of staff (teachers, research professors, administrative and technical staff) the Institute trains 1500 students on its two campuses in Blois and Bourges, France. 
@@ -191,7 +172,7 @@ It can been noticed, that the ERE department trains engineers through apprentice
 This program is  based on a partnership between the \INSA \CVL and Hubert Curien CFSA (Apprentice Further Training Centre), which has been an expert in delivering apprenticeship-based training for over 20 years.
 
 
-\SkipAndBreak
+\SkipAndBreak[1.5]
 
 As member of the teaching team on the campus in Bourges of \INSA \CVL, I am mainly involved in the students formation of the Industrial Risk Control (MRI), of the  Energy, Risk and the Environment (ERE), and of the  Sciences and Techniques for Engineers (STPI) departments. 
 Specifically, after having started with teaching of  electronics and electrical engineering, I have participated or organized lessons on  signal processing, sensors, control and robotics.
@@ -258,7 +239,7 @@ In particular, I am especially involved in the implementation of the teachings m
 %
 \begin{figure}[tbh]
   \centering
-  \includegraphics[scale=1]{fig/appendixCV/teaching_charge} %
+  \includegraphics{fig/appendixCV/teaching_charge} %
   \caption[Teaching load progress]{Teaching load progress expressed in \enquote{equivalent TD hours}  (see \autoref{foot:CV:hETD}).
    My average teaching load is about \SI{280}{\hETD}.
   The line at \SI{192}{\hETD} is the minimum  teaching duty to be achieved.}
@@ -267,7 +248,7 @@ In particular, I am especially involved in the implementation of the teachings m
 
 \medskip
 
-Since tenured as associate professor, my average teaching load is about \SI{280}{\hETD}\footnoteref{foot:CV:hETD}.
+Since tenured as associate professor, my average teaching load is about \SI{280}{\hETD}.
 This activity load is varied depending on the recruitment and the choice of engineering students in the different departments in which I intervene. 
 In particular, the hours performed in tutorials (TD), practical works (TP) or  projects (P) depend on the number of groups (\ie from 2 to 4 groups), especially for the   bachelor's degrees (L1-L3).
 \autoref{fig:teaching_charge} presents my teaching duty timeline progress expressed in \si{\hETD}  since tenured as Associate Professor.
@@ -314,7 +295,7 @@ Let us notice that all of these  projects have been subject to a process with a 
 
 \subsubsection[European Union  and National Funding Projects]{European Union (EU) and National Funding (ANR) Projects}
 
-\begin{enumerate}[leftmargin=3em,format={\sffamily\bfseries\smaller\color{blue2}},label={[EU\arabic*]}]
+\begin{CVlist}[label={[EU\arabic*]}]
   \item{}\textsf{NANOMA}: \label{proj:NANOMA} \glsdesc[hyper=false]{NANOMA}
   \begin{description}
     \item[Date] 06/2008 -- 10/2011
@@ -322,11 +303,11 @@ Let us notice that all of these  projects have been subject to a process with a 
     \item[Summary] \glsdesc[hyper=false]{glos:NANOMA}
     \item[Role] co-responsible of the workpackage WP4: ``{Object Tracking, Planning and Control in \MRIshort}''.
   \end{description}
-\end{enumerate}
+\end{CVlist}
 
   \medskip
   
-\begin{enumerate}[leftmargin=3em,format={\sffamily\bfseries\smaller\color{blue2}},label={[ANR\arabic*]}]
+\begin{CVlist}[label={[ANR\arabic*]}]
   \item{}\textsf{PROSIT}: \label{proj:PROSIT}  \glsdesc[hyper=false]{PROSIT} 
   \begin{description}
     \item[Date] 01/2009 -- 09/2012
@@ -358,14 +339,14 @@ Let us notice that all of these  projects have been subject to a process with a 
     \item[Summary] \glsdesc[hyper=false]{glos:PIANHO}
     \item[Role] co-responsible  of the workpackage: ``{Control of a Two-Fingered AFM-based Nano-manipulation System}''.
   \end{description}  
-\end{enumerate}
+\end{CVlist}
 
 
 %\SkipAndBreak[2]
 
 \subsubsection{Cooperation Projects}\label{sec:CV:coll:proj}
 
-\begin{enumerate}[leftmargin=3em,format={\sffamily\bfseries\smaller\color{blue2}},label={[PHC\arabic*]}]
+\begin{CVlist}[label={[PHC\arabic*]}]
   \item{}\textsf{PHC PROCOPE}: \label{proj:PROCOPE} Franco-Germain Hubert Curien\footnote{\PHC provides support for international scientific and technological exchange of the Ministry of Foreign Affairs. \url{https://www.campusfrance.org}} partnership
   \begin{description}
     \item[Date] 2010 -- 2011
@@ -382,11 +363,11 @@ Let us notice that all of these  projects have been subject to a process with a 
     \item[Summary]  Design, fabrication and characterization of the swim of enhanced helical microrobots.
     \item[Partnership] \glsdesc[hyper=false]{glos:MAE}
   \end{description}
-\end{enumerate}
+\end{CVlist}
 
 \subsubsection[Local Project]{Local Project (LP)}
 
-\begin{enumerate}[leftmargin=3em,format={\sffamily\bfseries\smaller\color{blue2}},label={[LP\arabic*]}]
+\begin{CVlist}[label={[LP\arabic*]}]
   \item{}\textsf{Nano-IRM}
   \begin{description}
     \item[Date] 09/2009 -- 08/2012
@@ -414,7 +395,7 @@ Let us notice that all of these  projects have been subject to a process with a 
     \item[Role] \textsl{Principal Investigator} (PI).
   \end{description}
 
-\end{enumerate}
+\end{CVlist}
 
 \SkipAndBreak
 
@@ -429,7 +410,7 @@ The different students that  I have supervised or followed their works are liste
 
 \paragraph{Thesis in progress}\label{sec:CV:PhD:continue}
 
-\begin{enumerate}[leftmargin=3em,format={\sffamily\bfseries\smaller\color{blue2}},label={[SUP\arabic*]}]
+\begin{CVlist}[label={[SUP\arabic*]}]
   \item{}\textsf{Ruipeng~Cheng}, 
   \begin{description}
     \item[Date] 11/2016 
@@ -437,11 +418,11 @@ The different students that  I have supervised or followed their works are liste
     \item[Supervision rate]  50\% with the Prof. Antoine Ferreira (\INSA \CVL) %[{\parbox[t]{1.75cm}{\raggedleft\smaller Supervision\\ Rate}}]
   \end{description}
   \SaveOrder
-\end{enumerate}
+\end{CVlist}
 
 \paragraph{Defended theses}\label{sec:CV:PhD:defended}
 
-\begin{enumerate}[leftmargin=3em,format={\sffamily\bfseries\smaller\color{blue2}},label={[SUP\arabic*]}]
+\begin{CVlist}[label={[SUP\arabic*]}]
   \LoadOrder
   \item{}\textsf{Karim~Belharet}, 
   \begin{description}
@@ -472,7 +453,7 @@ The different students that  I have supervised or followed their works are liste
     \item[Position] 
   \end{description}
   \SaveOrder
-\end{enumerate}
+\end{CVlist}
 
 \SkipAndBreak
 
@@ -480,7 +461,7 @@ The different students that  I have supervised or followed their works are liste
 Hereafter, are mentioned only students follow-ups that has lead to a publication.
 The mentioned dates correspond to the periods during which the follow-up of the students research was achieved.
 
-\begin{enumerate}[leftmargin=3em,format={\sffamily\bfseries\smaller\color{blue2}},label={[EXT\arabic*]}]
+\begin{CVlist}[label={[EXT\arabic*]}]
   \item{}\textsf{Jungsik~Kim}, \PhD degree from Korea Advanced Institute of Science and Technology (KAIST), South Korea.
   \begin{description}
     \item[Date] 09/2009--12/2012 
@@ -524,12 +505,12 @@ The mentioned dates correspond to the periods during which the follow-up of the 
     \item[Publications]\cite{2016_acsnano}
   \end{description}
   \SaveOrder
-\end{enumerate}
+\end{CVlist}
 
 
 \subsubsection{Masters Students}\label{sec:CV:Master}
 
-\begin{enumerate}[leftmargin=3em,format={\sffamily\bfseries\smaller\color{blue2}},label={[MS\arabic*]}]
+\begin{CVlist}[label={[MS\arabic*]}]
   \item{}\textsf{Kamel Ncir},  
   \begin{description}
     \item[Date] 03/2010--08/2010
@@ -541,7 +522,7 @@ The mentioned dates correspond to the periods during which the follow-up of the 
     \item[Date] 03/2011--08/2011
     \item[Subject]   Modeling and control of a nano-positioning platform
   \end{description}
-\end{enumerate}
+\end{CVlist}
 
 \SkipAndBreak[2]
 
@@ -556,9 +537,9 @@ Hereafter  are listed scientific cooperative works that have led to publications
 
 
 
-\begin{enumerate}[leftmargin=3em,format={\sffamily\bfseries\smaller\color{blue2}},label={[COL\arabic*]}]
+\begin{CVlist}[label={[COL\arabic*]}]
   \item{}\textsf{Nano-IRM}
-\end{enumerate}
+\end{CVlist}
 
 
 \subsection{Scientific Dissemination and Impact}\label{sec:CV:diffusion}
@@ -567,7 +548,7 @@ The appreciation of my research works have been effective through various action
 
 %\subsubsection{Expertise}
 %\paragraph{External Associate Professor recruitment}
-\begin{enumerate}[leftmargin=3em,format={\sffamily\bfseries\smaller\color{blue2}},label={[MCF\arabic*]}]  
+\begin{CVlist}[label={[MCF\arabic*]}]  
   \item{}position 61MCF932, 61\up{st} CNU section for {IUT de l'Indre}, University of Orléans
   \begin{description}
     \item[Date] May 2013, 
@@ -576,11 +557,11 @@ The appreciation of my research works have been effective through various action
   \begin{description}
     \item[Date] May 2015,
   \end{description}
-\end{enumerate}
+\end{CVlist}
 
 %\paragraph{\PhD Thesis Committee}
 I have been examining member of the \PhD thesis committee of the following doctorate candidate:
-\begin{enumerate}[leftmargin=3em,format={\sffamily\bfseries\smaller\color{blue2}},label={[TC\arabic*]}]  
+\begin{CVlist}[label={[TC\arabic*]}]  
   \item{}\textsf{Adrien Durant Petiteville}, 
   \begin{description}
     \item[Date] the 20\up{th} January 2012, Doctorate degree from Paul Sabatier University, Toulouse, France.
@@ -601,5 +582,5 @@ I have been examining member of the \PhD thesis committee of the following docto
     \item[Title]  Modeling, characterization and control of a magnetic microrobotic system at the air/liquid interface
     \item[Supervision] Prof. Stéphane Régnier from Pierre and Marie Curie University, Paris, and Micha\:el Gauthier senior researcher from  FEMTO-ST Institute, Besançon, France.
   \end{description}
-\end{enumerate}
+\end{CVlist}
 

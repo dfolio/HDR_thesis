@@ -84,7 +84,7 @@ TEX_DEPS+= $(TEX) $(INCLUDES_TEX) $(BIB_DEPS)  $(STY_DEPS) $(AUX)
 #pandoc global options
 # --filter ${FILTER} +yaml_metadata_block+auto_identifiers+header_attributes+latex_macros 
 PANDOC_GOPTS=  \
-  --number-sections --smart --tab-stop=2 \
+  --number-sections --smart --tab-stop=2 --atx-header\
   --default-image-extension=png \
 	-V lang=en -V otherlangs=en-US,fr,de\
 	--toc -V toc-depth=3 
@@ -116,8 +116,8 @@ view: $(PDF)
 #latex:$(AUX) $(TEX)   $(INCLUDES_TEX) $(STYLES)
 check: $(PDF) $(AUX)
 	@$(ECHO_E) "****************************************************\n"
-	@egrep -i "(Reference|Citation).*undefined" $(LOG) && ( $(ECHO_E) "Info :Reference OK"; $(ECHO_E) " Warning: Check the reference"); true
-	@egrep $(BADBOX) $(LOG)  && $(ECHO_E) " Warning: There were BAD BOX\n"; true
+	@egrep -i "(Reference|Citation).*undefined" $(LOG) && (  $(ECHO_E) " Warning: Check the reference") ||  $(ECHO_E) "Info : Reference OK"; true
+	@egrep $(BADBOX) $(LOG)  && $(ECHO_E) " Warning: There were BAD BOX\n" ||  $(ECHO_E) "Info : No BAD BOX"; true
 	@pdffonts $(PDF) | grep ".*Type 3.*" || $(ECHO_E) "Info : GOOD! no 'Type 3' font found in $(PDF)\n"
 
 
@@ -134,13 +134,13 @@ tex:$(TEX_DEPS)
 
 bib:$(BIB_DEPS)
 
-fig:$(FIG_SVG) $(FIG_PDF)
+fig:$(FIG_SVG) $(FIG_PDF) $(FIG_PNG)
 
 
 aux:$(TEX_DEPS) $(AUX)
 
 
-md:$(TEX_DEPS) 
+md:$(TEX_DEPS)   $(MDFILES) $(FIG_PNG)
 	@$(ECHO_E) "\n\n***\n*** [1] Running $(PANDOC) 'markdown' on $< ";
 	pandoc $(TEX) -f latex \
 	 $(PANDOC_GOPTS)\

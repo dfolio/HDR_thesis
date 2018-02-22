@@ -1,5 +1,5 @@
 % $Id$
-% !TeX encoding = UTF-8 
+% !TeX encoding = UTF-8
 % !TeX spellcheck = en_US
 % !TeX program = lualatex
 % ---------------------------------------------------------------------------------
@@ -11,8 +11,8 @@
 \ifx\pdfoutput\undefined\pdffalse\else\pdftrue\fi
 \usepackage[a-3u]{pdfx}
 \pdftrue
-%\usepackage[draft]{HDRdfolio} 
-\usepackage[final]{HDRdfolio} 
+\usepackage[draft]{HDRdfolio}
+%\usepackage[final]{HDRdfolio}
 % ********************************** Preamble **********************************
 % Preamble: Contains packages and user-defined commands and settings
 \input{./tex/00_preamble.tex}
@@ -20,17 +20,15 @@
 \makeatother
 
 % ---------------------------------------------------------------------------------
-% BEGIN DOCUMENT ------------------------------------------------------------------ 
+% BEGIN DOCUMENT ------------------------------------------------------------------
 \begin{document}
 
 \include{./tex/01_titlepage}
-\include{./tex/02_acknowledgements}
 
 % ---------------------------------------------------------------------------------
 % FRONTMATER ----------------------------------------------------------------------
 \frontmatter
-\clearemptydoublepage
-  
+\include{./tex/02_acknowledgements}
 \tableofcontents
 \listoffigures
 \listoftables%

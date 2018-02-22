@@ -42,6 +42,7 @@
 
 
 \RequirePackage{graphicx}
+\setkeys{Gin}{width=\csname Gin@nat@width\endcsname-1ex,keepaspectratio}
 \RequirePackage{a4wide}
 \RequirePackage[a4paper,centering,offset=0pt,]{geometry}
 
@@ -334,22 +335,26 @@
 }
 
 % 
-\newcommand\specialchapter@cx[2][\@empty]{%
-  \chapter[#2]{{#2}}\ifthenelse{\equal{#1}{}}{\label{chap:\@Roman\c@chapter}}{\label{chap:#1}}
-}
 \providecommand{\chapternameshort}{Chap.}
 %
-\newcommand{\Chapitre}[2][]{%
+\let\stdchapter\chapter
+\renewcommand*\chapter{\@ifstar{\starchapter}{\@dblarg\nostarchapter}}
+
+\newcommand*\starchapter[1]{%
   \clearemptydoublepage%
-  %\chapter[#1]{{#1}}%
+  \thispagestyle{plain}%
+  \stdchapter*{#1}
+  \chaptermark{#1}
+}
+\def\nostarchapter[#1]#2{%
+  \clearemptydoublepage%
   \thispagestyle{plain}%
   \global\@topnum\z@
   \renewcommand\@chapapp{\chaptername}
-  \specialchapter@cx[#1]{#2}
+  \stdchapter[#1]{#2}
   \renewcommand\@chapapp{\chapternameshort}
   \chaptermark{#2}
 }
-
 
 % %From Glenn chapter style
 \renewcommand{\DOCH}{%
@@ -716,15 +721,18 @@
 % ---------------------------------------------------------------------------------
 % % Lists
 \RequirePackage{enumerate,enumitem}
+\SetLabelAlign{parright}{\nobreak
+    \strut\smash{\parbox[t]\labelwidth{\raggedleft#1}}}
+%\parbox[t]{\labelwidth}{\raggedleft#1}}
 \setlist{nolistsep,noitemsep}
 %\setlist[1]{\labelindent=\parindent} % < Usually a good idea
+\setlist[description]{format={\sffamily\bfseries}}
 \setlist[itemize]{leftmargin=*}
 \setlist[itemize,1]{label={\bfseries\textbullet}}
 \setlist[itemize,2]{label={\bfseries\textendash}}
 % \renewcommand{\labelitemi}{{\bfseries\textbullet}}
 % \renewcommand{\labelitemii}{{\bfseries\textendash}}
 % \renewcommand{\labelitemiii}{\textasteriskcentered}
-
 
 \newcounter{mainmemorder}
 \newcommand{\SaveOrderCounter}{\setcounter{mainmemorder}{\value{enumi}}}
@@ -793,13 +801,19 @@
 \closeout\file
 \endgroup
 
+
 \captionsetup{format=hang,parskip=\z@, %indention=2em,
   font={small,sf},labelfont=bf,textfont={},width={\textwidth-1ex}}
-
 \newskip\HDRcaptionaboveamount             \HDRcaptionaboveamount=1ex plus0.5ex minus0.5ex
 \newskip\HDRcaptionbelowamount             \HDRcaptionbelowamount=1em plus1ex minus1ex
-\captionsetup[figure]{position=bottom,skip=1ex,aboveskip=\HDRcaptionaboveamount,belowskip=\HDRcaptionbelowamount}
-\captionsetup[table]{position=top,skip=1ex,aboveskip=\HDRcaptionaboveamount,belowskip=\HDRcaptionbelowamount}
+
+\textfloatsep.75\HDRcaptionbelowamount %distance between floats on the top or the bottom and the text;
+\floatsep.75\HDRcaptionaboveamount     % distance between two floats;
+\intextsep.5\HDRcaptionaboveamount    % distance between floats inserted inside the page text (using h) and the text proper.
+
+\captionsetup[figure]{position=bottom,aboveskip=\HDRcaptionaboveamount,belowskip=\HDRcaptionbelowamount}
+\captionsetup[table]{position=top,aboveskip=\HDRcaptionaboveamount,belowskip=\HDRcaptionbelowamount}
+
 \hypersetup{
   pdfencoding=unicode,unicode,
   psdextra,hyperindex=true,pagebackref,
